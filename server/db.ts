@@ -14,8 +14,14 @@ let _pool: Pool | null = null;
 export async function getDb(): Promise<DbType | null> {
     if (!ENV.databaseUrl) {
         console.warn("[Database] DATABASE_URL is not set");
+        console.warn("[Database] MYSQL_URL:", process.env.MYSQL_URL ? "set" : "not set");
+        console.warn("[Database] DATABASE_URL:", process.env.DATABASE_URL ? "set" : "not set");
         return null;
     }
+
+    // 接続文字列をログに記録（パスワード部分はマスク）
+    const maskedUrl = ENV.databaseUrl.replace(/:([^:@]+)@/, ":****@");
+    console.log("[Database] Using connection string:", maskedUrl);
 
     // プールor db がないときは作り直し
     if (!_pool || !_db) {
@@ -31,8 +37,22 @@ export async function getDb(): Promise<DbType | null> {
             _pool = createPool(ENV.databaseUrl);
             _db = drizzle(_pool, { schema, mode: "default" }) as unknown as DbType;
             console.log("[Database] Database connection pool created");
-        } catch (error) {
+            
+            // 接続テストを実行
+            try {
+                await _pool.execute("SELECT 1");
+                console.log("[Database] ✅ Connection test successful");
+            } catch (testError: any) {
+                console.error("[Database] ❌ Connection test failed:", testError.message);
+                console.error("[Database] Error code:", testError.code);
+                console.error("[Database] Error errno:", testError.errno);
+                throw testError;
+            }
+        } catch (error: any) {
             console.error("[Database] Failed to create connection pool:", error);
+            console.error("[Database] Error message:", error?.message);
+            console.error("[Database] Error code:", error?.code);
+            console.error("[Database] Error errno:", error?.errno);
             _db = null;
             _pool = null;
             return null;
@@ -149,6 +169,9 @@ export async function getUserByUsername(username: string) {
         };
     } catch (error: any) {
         console.error("[getUserByUsername] ❌ Error:", error);
+        console.error("[getUserByUsername] Error message:", error?.message);
+        console.error("[getUserByUsername] Error code:", error?.code);
+        console.error("[getUserByUsername] Error errno:", error?.errno);
         return undefined;
     }
 }
