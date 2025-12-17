@@ -29,9 +29,12 @@ export default function WorkDisplay() {
         refetchInterval: 30000,
     });
 
-    const { data: workRecordIssues, isLoading: isLoadingIssues } = trpc.analytics.getWorkRecordIssues.useQuery(undefined, {
-        refetchInterval: 30000,
-    });
+    // サンプルページのため無効化
+    // const { data: workRecordIssues, isLoading: isLoadingIssues } = trpc.analytics.getWorkRecordIssues.useQuery(undefined, {
+    //     refetchInterval: 30000,
+    // });
+    const workRecordIssues: any[] = [];
+    const isLoadingIssues = false;
 
     const { data: unreadBroadcasts, isLoading: isLoadingBroadcasts } = trpc.salesBroadcasts.getUnread.useQuery(undefined, {
         refetchInterval: 30000,

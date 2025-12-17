@@ -91,8 +91,8 @@ export default function WorkReportIssues() {
                 userId: userId!,
                 workDate,
             });
-            // 作業記録管理不備も再計算する
-            utils.analytics.getWorkRecordIssues.invalidate();
+            // 作業記録管理不備も再計算する（サンプルページのため無効化）
+            // utils.analytics.getWorkRecordIssues.invalidate();
         },
         onError: (error: any) => {
             const errorMessage = error?.message || error?.data?.message || error?.shape?.message || "作業記録の追加に失敗しました";
@@ -118,8 +118,8 @@ export default function WorkReportIssues() {
                 userId: userId!,
                 workDate,
             });
-            // 作業記録管理不備も再計算する
-            utils.analytics.getWorkRecordIssues.invalidate();
+            // 作業記録管理不備も再計算する（サンプルページのため無効化）
+            // utils.analytics.getWorkRecordIssues.invalidate();
         },
         onError: (error) => {
             toast.error(error.message || "作業記録の更新に失敗しました");
@@ -135,8 +135,8 @@ export default function WorkReportIssues() {
                 userId: userId!,
                 workDate,
             });
-            // 作業記録管理不備も再計算する
-            utils.analytics.getWorkRecordIssues.invalidate();
+            // 作業記録管理不備も再計算する（サンプルページのため無効化）
+            // utils.analytics.getWorkRecordIssues.invalidate();
         },
         onError: (error) => {
             toast.error(error.message || "作業記録の削除に失敗しました");
@@ -152,8 +152,8 @@ export default function WorkReportIssues() {
                 userId: userId!,
                 workDate,
             });
-            // 作業記録管理不備も再計算する
-            utils.analytics.getWorkRecordIssues.invalidate();
+            // 作業記録管理不備も再計算する（サンプルページのため無効化）
+            // utils.analytics.getWorkRecordIssues.invalidate();
         },
         onError: (error) => {
             toast.error(error.message || "出勤記録の更新に失敗しました");
