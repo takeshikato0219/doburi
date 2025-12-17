@@ -178,7 +178,10 @@ export async function getUserByUsername(username: string) {
 
 export async function getUserById(id: number) {
     const db = await getDb();
-    if (!db) return undefined;
+    if (!db) {
+        console.warn("[getUserById] Database not available for userId:", id);
+        return undefined;
+    }
     try {
         const users = await selectUsersSafely(db, eq(schema.users.id, id));
         return users[0];
