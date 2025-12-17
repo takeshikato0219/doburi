@@ -9,8 +9,8 @@
         --card: 0 0% 100%;
         --card-foreground: 0 0% 0%;
         --popover: 0 0% 100%;
-        --popover-foreground: 0 0% 0%;
-        --primary: 217 89% 61%; /* #4285F4 - Google Blue */
+        --popover-foreground: 0 0% 9%;
+        --primary: 204 98% 42%; /* #0176D3 - Salesforce Blue */
         --primary-foreground: 0 0% 100%;
         --secondary: 0 0% 96%; /* #F5F5F5 - Material Grey 100 */
         --secondary-foreground: 0 0% 0%;
