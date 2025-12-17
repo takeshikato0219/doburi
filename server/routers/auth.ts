@@ -127,6 +127,12 @@ export const authRouter = createTRPCRouter({
                 console.log("[Auth] MYSQL_URL:", process.env.MYSQL_URL ? "set" : "not set");
                 console.log("[Auth] DATABASE_URL:", process.env.DATABASE_URL ? "set" : "not set");
                 
+                // DATABASE_URLの値を確認（マスクして）
+                if (process.env.DATABASE_URL) {
+                    const maskedDbUrl = process.env.DATABASE_URL.replace(/:([^:@]+)@/, ":****@");
+                    console.log("[Auth] DATABASE_URL value:", maskedDbUrl);
+                }
+                
                 const db = await getDb();
                 if (!db) {
                     console.error("[Auth] ❌ Database connection failed");
@@ -135,9 +141,21 @@ export const authRouter = createTRPCRouter({
                         DATABASE_URL: process.env.DATABASE_URL ? "set" : "not set",
                     };
                     console.error("[Auth] Environment variables status:", envStatus);
+                    
+                    // DATABASE_URLのホスト部分を確認
+                    let hostInfo = "unknown";
+                    if (process.env.DATABASE_URL) {
+                        try {
+                            const url = new URL(process.env.DATABASE_URL);
+                            hostInfo = url.hostname;
+                        } catch (e) {
+                            hostInfo = "invalid URL format";
+                        }
+                    }
+                    
                     throw new TRPCError({
                         code: "INTERNAL_SERVER_ERROR",
-                        message: `データベースに接続できません。環境変数を確認してください。MYSQL_URL: ${envStatus.MYSQL_URL}, DATABASE_URL: ${envStatus.DATABASE_URL}`,
+                        message: `データベースに接続できません。環境変数を確認してください。MYSQL_URL: ${envStatus.MYSQL_URL}, DATABASE_URL: ${envStatus.DATABASE_URL}, Host: ${hostInfo}`,
                     });
                 }
 
