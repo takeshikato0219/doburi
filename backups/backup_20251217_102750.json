@@ -1,0 +1,1377 @@
+{
+  "timestamp": "2025-12-17T01:27:50.468Z",
+  "version": "1.0.0",
+  "data": {
+    "vehicles": [
+      {
+        "id": 1,
+        "vehicleNumber": "あ",
+        "vehicleTypeId": 1,
+        "category": "キャンパー",
+        "customerName": "あ",
+        "desiredDeliveryDate": null,
+        "status": "in_progress",
+        "createdAt": "2025-12-13T07:44:01.000Z",
+        "updatedAt": "2025-12-13T07:44:01.000Z"
+      },
+      {
+        "id": 2,
+        "vehicleNumber": "え",
+        "vehicleTypeId": 1,
+        "category": "キャンパー",
+        "customerName": "え",
+        "desiredDeliveryDate": null,
+        "status": "in_progress",
+        "createdAt": "2025-12-13T07:44:11.000Z",
+        "updatedAt": "2025-12-13T07:44:11.000Z"
+      },
+      {
+        "id": 3,
+        "vehicleNumber": "r",
+        "vehicleTypeId": 1,
+        "category": "キャンパー",
+        "customerName": "r",
+        "desiredDeliveryDate": null,
+        "status": "in_progress",
+        "createdAt": "2025-12-13T07:44:19.000Z",
+        "updatedAt": "2025-12-13T07:44:19.000Z"
+      },
+      {
+        "id": 4,
+        "vehicleNumber": "t",
+        "vehicleTypeId": 1,
+        "category": "キャンパー",
+        "customerName": "t",
+        "desiredDeliveryDate": null,
+        "status": "in_progress",
+        "createdAt": "2025-12-13T07:44:26.000Z",
+        "updatedAt": "2025-12-13T07:44:26.000Z"
+      },
+      {
+        "id": 5,
+        "vehicleNumber": "y",
+        "vehicleTypeId": 1,
+        "category": "キャンパー",
+        "customerName": "y",
+        "desiredDeliveryDate": null,
+        "status": "in_progress",
+        "createdAt": "2025-12-13T07:44:31.000Z",
+        "updatedAt": "2025-12-13T07:44:31.000Z"
+      },
+      {
+        "id": 6,
+        "vehicleNumber": "SAMPLE-001",
+        "vehicleTypeId": 1,
+        "category": "一般",
+        "customerName": "サンプル顧客1",
+        "desiredDeliveryDate": null,
+        "status": "in_progress",
+        "createdAt": "2025-12-13T07:54:47.000Z",
+        "updatedAt": "2025-12-13T07:54:47.000Z"
+      },
+      {
+        "id": 7,
+        "vehicleNumber": "SAMPLE-002",
+        "vehicleTypeId": 1,
+        "category": "キャンパー",
+        "customerName": "サンプル顧客2",
+        "desiredDeliveryDate": null,
+        "status": "in_progress",
+        "createdAt": "2025-12-13T07:54:47.000Z",
+        "updatedAt": "2025-12-13T07:54:47.000Z"
+      },
+      {
+        "id": 8,
+        "vehicleNumber": "SAMPLE-003",
+        "vehicleTypeId": 1,
+        "category": "中古",
+        "customerName": "サンプル顧客3",
+        "desiredDeliveryDate": null,
+        "status": "in_progress",
+        "createdAt": "2025-12-13T07:54:47.000Z",
+        "updatedAt": "2025-12-13T07:54:47.000Z"
+      },
+      {
+        "id": 9,
+        "vehicleNumber": "SAMPLE-004",
+        "vehicleTypeId": 1,
+        "category": "修理",
+        "customerName": "サンプル顧客4",
+        "desiredDeliveryDate": null,
+        "status": "in_progress",
+        "createdAt": "2025-12-13T07:54:47.000Z",
+        "updatedAt": "2025-12-13T07:54:47.000Z"
+      },
+      {
+        "id": 10,
+        "vehicleNumber": "SAMPLE-005",
+        "vehicleTypeId": 1,
+        "category": "クレーム",
+        "customerName": "サンプル顧客5",
+        "desiredDeliveryDate": null,
+        "status": "in_progress",
+        "createdAt": "2025-12-13T07:54:47.000Z",
+        "updatedAt": "2025-12-13T07:54:47.000Z"
+      }
+    ],
+    "checkItems": [
+      {
+        "id": 1,
+        "category": "一般",
+        "name": "サンプルチェック01",
+        "description": "サンプル用チェック項目 01",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 2,
+        "category": "キャンパー",
+        "name": "サンプルチェック02",
+        "description": "サンプル用チェック項目 02",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 3,
+        "category": "中古",
+        "name": "サンプルチェック03",
+        "description": "サンプル用チェック項目 03",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 4,
+        "category": "修理",
+        "name": "サンプルチェック04",
+        "description": "サンプル用チェック項目 04",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 5,
+        "category": "クレーム",
+        "name": "サンプルチェック05",
+        "description": "サンプル用チェック項目 05",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 6,
+        "category": "一般",
+        "name": "サンプルチェック06",
+        "description": "サンプル用チェック項目 06",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 7,
+        "category": "キャンパー",
+        "name": "サンプルチェック07",
+        "description": "サンプル用チェック項目 07",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 8,
+        "category": "中古",
+        "name": "サンプルチェック08",
+        "description": "サンプル用チェック項目 08",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 9,
+        "category": "修理",
+        "name": "サンプルチェック09",
+        "description": "サンプル用チェック項目 09",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 10,
+        "category": "クレーム",
+        "name": "サンプルチェック10",
+        "description": "サンプル用チェック項目 10",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 11,
+        "category": "一般",
+        "name": "サンプルチェック11",
+        "description": "サンプル用チェック項目 11",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 12,
+        "category": "キャンパー",
+        "name": "サンプルチェック12",
+        "description": "サンプル用チェック項目 12",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 13,
+        "category": "中古",
+        "name": "サンプルチェック13",
+        "description": "サンプル用チェック項目 13",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 14,
+        "category": "修理",
+        "name": "サンプルチェック14",
+        "description": "サンプル用チェック項目 14",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 15,
+        "category": "クレーム",
+        "name": "サンプルチェック15",
+        "description": "サンプル用チェック項目 15",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 16,
+        "category": "一般",
+        "name": "サンプルチェック16",
+        "description": "サンプル用チェック項目 16",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 17,
+        "category": "キャンパー",
+        "name": "サンプルチェック17",
+        "description": "サンプル用チェック項目 17",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 18,
+        "category": "中古",
+        "name": "サンプルチェック18",
+        "description": "サンプル用チェック項目 18",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 19,
+        "category": "修理",
+        "name": "サンプルチェック19",
+        "description": "サンプル用チェック項目 19",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 20,
+        "category": "クレーム",
+        "name": "サンプルチェック20",
+        "description": "サンプル用チェック項目 20",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 21,
+        "category": "一般",
+        "name": "サンプルチェック21",
+        "description": "サンプル用チェック項目 21",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 22,
+        "category": "キャンパー",
+        "name": "サンプルチェック22",
+        "description": "サンプル用チェック項目 22",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 23,
+        "category": "中古",
+        "name": "サンプルチェック23",
+        "description": "サンプル用チェック項目 23",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 24,
+        "category": "修理",
+        "name": "サンプルチェック24",
+        "description": "サンプル用チェック項目 24",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 25,
+        "category": "クレーム",
+        "name": "サンプルチェック25",
+        "description": "サンプル用チェック項目 25",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 26,
+        "category": "一般",
+        "name": "サンプルチェック26",
+        "description": "サンプル用チェック項目 26",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 27,
+        "category": "キャンパー",
+        "name": "サンプルチェック27",
+        "description": "サンプル用チェック項目 27",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 28,
+        "category": "中古",
+        "name": "サンプルチェック28",
+        "description": "サンプル用チェック項目 28",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 29,
+        "category": "修理",
+        "name": "サンプルチェック29",
+        "description": "サンプル用チェック項目 29",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      },
+      {
+        "id": 30,
+        "category": "クレーム",
+        "name": "サンプルチェック30",
+        "description": "サンプル用チェック項目 30",
+        "createdAt": "2025-12-13T07:38:03.000Z",
+        "updatedAt": "2025-12-13T07:38:03.000Z"
+      }
+    ],
+    "users": [
+      {
+        "id": 1,
+        "username": "admin",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "管理者",
+        "role": "admin",
+        "category": null
+      },
+      {
+        "id": 2,
+        "username": "user001",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "加藤健資",
+        "role": "admin",
+        "category": null
+      },
+      {
+        "id": 3,
+        "username": "user002",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "古澤清隆",
+        "role": "admin",
+        "category": null
+      },
+      {
+        "id": 4,
+        "username": "user003",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "野島悟",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 5,
+        "username": "user004",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "目黒弥須子",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 6,
+        "username": "user005",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "齋藤祐美",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 7,
+        "username": "user006",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "高野晴香",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 8,
+        "username": "user007",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "渡邊千尋",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 9,
+        "username": "user008",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "金子真由美",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 10,
+        "username": "user009",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "高野涼香",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 11,
+        "username": "user010",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "澁木芳美",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 12,
+        "username": "user011",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "樋口義則",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 13,
+        "username": "user012",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "太田千明",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 14,
+        "username": "user013",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "山崎正昭",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 15,
+        "username": "user014",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "落合岳朗",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 16,
+        "username": "user015",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "澁木健治郎",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 17,
+        "username": "user016",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "近藤一樹",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 18,
+        "username": "user017",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "松永旭生",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 19,
+        "username": "user018",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "鈴木竜輔",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 20,
+        "username": "user019",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "斉藤政春",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 21,
+        "username": "user020",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "土田宏子",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 22,
+        "username": "user021",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "笠井　猛",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 23,
+        "username": "user022",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "頓所　歩",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 24,
+        "username": "user023",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "永井富美華",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 25,
+        "username": "user024",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "関根光繁",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 26,
+        "username": "user025",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "青池和磨",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 27,
+        "username": "user026",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "星　英子",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 28,
+        "username": "user027",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "浅見道則",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 29,
+        "username": "user028",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "不破俊典",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 30,
+        "username": "user029",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "服部　亮",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 31,
+        "username": "user030",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "渡辺ゆり夏",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 32,
+        "username": "user031",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "内田　陽",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 33,
+        "username": "user032",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "スタッフ32",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 34,
+        "username": "user033",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "スタッフ33",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 35,
+        "username": "user034",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "スタッフ34",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 36,
+        "username": "user035",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "スタッフ35",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 37,
+        "username": "user036",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "スタッフ36",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 38,
+        "username": "user037",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "スタッフ37",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 39,
+        "username": "user038",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "スタッフ38",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 40,
+        "username": "user039",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "スタッフ39",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 41,
+        "username": "user040",
+        "password": "$2b$10$2jAcqfLMiclbM9NvlXDQo.QVliqKs/HNLBvYR6.hjqp3NOp2N0ieW",
+        "name": "スタッフ40",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 42,
+        "username": "user041",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ01",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 43,
+        "username": "sample_staff02",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ02",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 44,
+        "username": "sample_staff03",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ03",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 45,
+        "username": "sample_staff04",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ04",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 46,
+        "username": "sample_staff05",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ05",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 47,
+        "username": "sample_staff06",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ06",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 48,
+        "username": "sample_staff07",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ07",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 49,
+        "username": "sample_staff08",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ08",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 50,
+        "username": "sample_staff09",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ09",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 51,
+        "username": "sample_staff10",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ10",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 52,
+        "username": "sample_staff11",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ11",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 53,
+        "username": "sample_staff12",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ12",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 54,
+        "username": "sample_staff13",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ13",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 55,
+        "username": "sample_staff14",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ14",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 56,
+        "username": "sample_staff15",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ15",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 57,
+        "username": "sample_staff16",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ16",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 58,
+        "username": "sample_staff17",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ17",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 59,
+        "username": "sample_staff18",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ18",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 60,
+        "username": "sample_staff19",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ19",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 61,
+        "username": "sample_staff20",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ20",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 62,
+        "username": "sample_staff21",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ21",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 63,
+        "username": "sample_staff22",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ22",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 64,
+        "username": "sample_staff23",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ23",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 65,
+        "username": "sample_staff24",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ24",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 66,
+        "username": "sample_staff25",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ25",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 67,
+        "username": "sample_staff26",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ26",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 68,
+        "username": "sample_staff27",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ27",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 69,
+        "username": "sample_staff28",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ28",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 70,
+        "username": "sample_staff29",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ29",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 71,
+        "username": "sample_staff30",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ30",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 72,
+        "username": "sample_staff31",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ31",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 73,
+        "username": "sample_staff32",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ32",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 74,
+        "username": "sample_staff33",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ33",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 75,
+        "username": "sample_staff34",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ34",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 76,
+        "username": "sample_staff35",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ35",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 77,
+        "username": "sample_staff36",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ36",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 78,
+        "username": "sample_staff37",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ37",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 79,
+        "username": "sample_staff38",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ38",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 80,
+        "username": "sample_staff39",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ39",
+        "role": "field_worker",
+        "category": null
+      },
+      {
+        "id": 81,
+        "username": "sample_staff40",
+        "password": "$2b$10$QDT9GtsTpjpZ0K.hAp/yOOXEE8lvp8EUQhNlQBikoF1zd2g07K5mi",
+        "name": "スタッフ40",
+        "role": "field_worker",
+        "category": null
+      }
+    ],
+    "staffScheduleDisplayOrder": [
+      {
+        "id": 1,
+        "userId": 1,
+        "displayOrder": 1,
+        "displayName": "スタッフ1",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 2,
+        "userId": 2,
+        "displayOrder": 2,
+        "displayName": "スタッフ2",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 3,
+        "userId": 3,
+        "displayOrder": 3,
+        "displayName": "スタッフ3",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 4,
+        "userId": 4,
+        "displayOrder": 4,
+        "displayName": "スタッフ4",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 5,
+        "userId": 5,
+        "displayOrder": 5,
+        "displayName": "スタッフ5",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 6,
+        "userId": 6,
+        "displayOrder": 6,
+        "displayName": "スタッフ6",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 7,
+        "userId": 7,
+        "displayOrder": 7,
+        "displayName": "スタッフ7",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 8,
+        "userId": 8,
+        "displayOrder": 8,
+        "displayName": "スタッフ8",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 9,
+        "userId": 9,
+        "displayOrder": 9,
+        "displayName": "スタッフ9",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 10,
+        "userId": 10,
+        "displayOrder": 10,
+        "displayName": "スタッフ10",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 11,
+        "userId": 11,
+        "displayOrder": 11,
+        "displayName": "スタッフ11",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 12,
+        "userId": 12,
+        "displayOrder": 12,
+        "displayName": "スタッフ12",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 13,
+        "userId": 13,
+        "displayOrder": 13,
+        "displayName": "スタッフ13",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 14,
+        "userId": 14,
+        "displayOrder": 14,
+        "displayName": "スタッフ14",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 15,
+        "userId": 15,
+        "displayOrder": 15,
+        "displayName": "スタッフ15",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 16,
+        "userId": 16,
+        "displayOrder": 16,
+        "displayName": "スタッフ16",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 17,
+        "userId": 17,
+        "displayOrder": 17,
+        "displayName": "スタッフ17",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 18,
+        "userId": 18,
+        "displayOrder": 18,
+        "displayName": "スタッフ18",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 19,
+        "userId": 19,
+        "displayOrder": 19,
+        "displayName": "スタッフ19",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      },
+      {
+        "id": 20,
+        "userId": 20,
+        "displayOrder": 20,
+        "displayName": "スタッフ20",
+        "createdAt": "2025-12-07T15:01:20.000Z",
+        "updatedAt": "2025-12-07T15:01:20.000Z"
+      }
+    ],
+    "vehicleTypes": [
+      {
+        "id": 1,
+        "name": "あ",
+        "description": "あ",
+        "standardTotalMinutes": null,
+        "createdAt": "2025-12-13T07:43:52.000Z",
+        "updatedAt": "2025-12-13T07:43:52.000Z"
+      }
+    ],
+    "processes": [
+      {
+        "id": 1,
+        "name": "下地",
+        "description": "断熱、根太、FFヒーター",
+        "majorCategory": "下地",
+        "minorCategory": "断熱",
+        "displayOrder": 1,
+        "createdAt": "2025-12-07T14:40:48.000Z",
+        "updatedAt": "2025-12-07T14:40:48.000Z"
+      },
+      {
+        "id": 2,
+        "name": "地設",
+        "description": "地設",
+        "majorCategory": "地設",
+        "minorCategory": "地設",
+        "displayOrder": 2,
+        "createdAt": "2025-12-07T14:40:48.000Z",
+        "updatedAt": "2025-12-07T14:40:48.000Z"
+      },
+      {
+        "id": 3,
+        "name": "家具",
+        "description": "家具",
+        "majorCategory": "家具",
+        "minorCategory": "家具",
+        "displayOrder": 3,
+        "createdAt": "2025-12-07T14:40:48.000Z",
+        "updatedAt": "2025-12-07T14:40:48.000Z"
+      },
+      {
+        "id": 4,
+        "name": "仕上げ",
+        "description": "床張り、壁張り、天井張り、家具取り付け",
+        "majorCategory": "仕上げ",
+        "minorCategory": "床張り",
+        "displayOrder": 4,
+        "createdAt": "2025-12-07T14:40:48.000Z",
+        "updatedAt": "2025-12-07T14:40:48.000Z"
+      },
+      {
+        "id": 5,
+        "name": "搬移転",
+        "description": "搬移転",
+        "majorCategory": "搬移転",
+        "minorCategory": "搬移転",
+        "displayOrder": 5,
+        "createdAt": "2025-12-07T14:40:48.000Z",
+        "updatedAt": "2025-12-07T14:40:48.000Z"
+      },
+      {
+        "id": 6,
+        "name": "登録",
+        "description": "登録",
+        "majorCategory": "登録",
+        "minorCategory": "登録",
+        "displayOrder": 6,
+        "createdAt": "2025-12-07T14:40:48.000Z",
+        "updatedAt": "2025-12-07T14:40:48.000Z"
+      },
+      {
+        "id": 7,
+        "name": "雑製",
+        "description": "雑製",
+        "majorCategory": "雑製",
+        "minorCategory": "雑製",
+        "displayOrder": 7,
+        "createdAt": "2025-12-07T14:40:48.000Z",
+        "updatedAt": "2025-12-07T14:40:48.000Z"
+      },
+      {
+        "id": 8,
+        "name": "FRP",
+        "description": "FRP",
+        "majorCategory": "FRP",
+        "minorCategory": "FRP",
+        "displayOrder": 8,
+        "createdAt": "2025-12-07T14:40:48.000Z",
+        "updatedAt": "2025-12-07T14:40:48.000Z"
+      },
+      {
+        "id": 9,
+        "name": "修理",
+        "description": "修理",
+        "majorCategory": "修理",
+        "minorCategory": "修理",
+        "displayOrder": 9,
+        "createdAt": "2025-12-07T14:40:48.000Z",
+        "updatedAt": "2025-12-07T14:40:48.000Z"
+      },
+      {
+        "id": 10,
+        "name": "掃除",
+        "description": "掃除",
+        "majorCategory": "掃除",
+        "minorCategory": "掃除",
+        "displayOrder": 10,
+        "createdAt": "2025-12-07T14:40:48.000Z",
+        "updatedAt": "2025-12-07T14:40:48.000Z"
+      }
+    ],
+    "breakTimes": [
+      {
+        "id": 1,
+        "name": "昼休憩",
+        "startTime": "12:00",
+        "endTime": "13:20",
+        "durationMinutes": 80,
+        "isActive": "true",
+        "createdAt": "2025-12-10T22:23:27.000Z",
+        "updatedAt": "2025-12-10T22:23:27.000Z"
+      }
+    ],
+    "attendanceRecords": [
+      {
+        "id": 1,
+        "userId": 11,
+        "workDate": "2025-12-09T00:00:00.000Z",
+        "clockInTime": "07:00",
+        "clockOutTime": "15:00",
+        "workMinutes": 400,
+        "clockIn": null,
+        "clockOut": null,
+        "workDuration": null,
+        "clockInDevice": "pc",
+        "clockOutDevice": "pc",
+        "createdAt": "2025-12-10T22:38:36.000Z",
+        "updatedAt": "2025-12-10T22:38:36.000Z"
+      }
+    ],
+    "attendanceEditLogs": [],
+    "workRecords": [
+      {
+        "id": 1,
+        "userId": 1,
+        "vehicleId": 1,
+        "processId": 9,
+        "startTime": "2025-12-10T23:35:00.000Z",
+        "endTime": "2025-12-11T01:00:00.000Z",
+        "workDescription": null,
+        "photoUrls": null,
+        "videoUrls": null,
+        "createdAt": "2025-12-13T07:45:28.000Z",
+        "updatedAt": "2025-12-13T07:45:28.000Z"
+      },
+      {
+        "id": 2,
+        "userId": 1,
+        "vehicleId": 2,
+        "processId": 9,
+        "startTime": "2025-12-11T01:00:00.000Z",
+        "endTime": "2025-12-11T02:00:00.000Z",
+        "workDescription": null,
+        "photoUrls": null,
+        "videoUrls": null,
+        "createdAt": "2025-12-13T07:45:42.000Z",
+        "updatedAt": "2025-12-13T07:45:42.000Z"
+      },
+      {
+        "id": 3,
+        "userId": 1,
+        "vehicleId": 3,
+        "processId": 2,
+        "startTime": "2025-12-11T02:00:00.000Z",
+        "endTime": "2025-12-11T03:00:00.000Z",
+        "workDescription": null,
+        "photoUrls": null,
+        "videoUrls": null,
+        "createdAt": "2025-12-13T07:45:58.000Z",
+        "updatedAt": "2025-12-13T07:45:58.000Z"
+      },
+      {
+        "id": 4,
+        "userId": 1,
+        "vehicleId": 1,
+        "processId": 9,
+        "startTime": "2025-12-11T03:00:00.000Z",
+        "endTime": "2025-12-11T05:00:00.000Z",
+        "workDescription": null,
+        "photoUrls": null,
+        "videoUrls": null,
+        "createdAt": "2025-12-13T07:46:19.000Z",
+        "updatedAt": "2025-12-13T07:46:19.000Z"
+      }
+    ],
+    "vehicleProcessTargets": [],
+    "vehicleTypeProcessStandards": [],
+    "vehicleMemos": [],
+    "vehicleChecks": [],
+    "checkRequests": [],
+    "staffScheduleEntries": [],
+    "staffScheduleEditLogs": [],
+    "vehicleOutsourcing": [],
+    "vehicleAttentionPoints": []
+  }
+}

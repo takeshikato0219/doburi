@@ -1,0 +1,515 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Google+Sans:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+@layer base {
+    :root {
+        /* Google Material Design Color Palette */
+        --background: 0 0% 100%;
+        --foreground: 0 0% 0%; /* #000000 - Black Text */
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 0%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 0%;
+        --primary: 217 89% 61%; /* #4285F4 - Google Blue */
+        --primary-foreground: 0 0% 100%;
+        --secondary: 0 0% 96%; /* #F5F5F5 - Material Grey 100 */
+        --secondary-foreground: 0 0% 0%;
+        --muted: 0 0% 96%;
+        --muted-foreground: 0 0% 46%; /* #757575 - Material Grey 600 */
+        --accent: 217 89% 61%;
+        --accent-foreground: 0 0% 100%;
+        --destructive: 4 90% 58%; /* #EA4335 - Google Red */
+        --destructive-foreground: 0 0% 100%;
+        --border: 0 0% 88%; /* #E0E0E0 - Material Grey 300 */
+        --input: 0 0% 88%;
+        --ring: 217 89% 61%;
+        --radius: 0.5rem; /* 8px - Material Design border radius */
+        
+        /* Google Material Design Colors */
+        --google-gray-50: 0 0% 98%;
+        --google-gray-100: 0 0% 96%;
+        --google-gray-200: 0 0% 93%;
+        --google-gray-300: 0 0% 88%;
+        --google-gray-400: 0 0% 74%;
+        --google-gray-500: 0 0% 62%;
+        --google-gray-600: 0 0% 46%;
+        --google-gray-700: 0 0% 38%;
+        --google-gray-800: 0 0% 26%;
+        --google-gray-900: 0 0% 13%;
+        
+        --google-blue-50: 217 100% 97%;
+        --google-blue-100: 217 96% 94%;
+        --google-blue-200: 217 92% 88%;
+        --google-blue-300: 217 89% 78%;
+        --google-blue-400: 217 89% 70%;
+        --google-blue-500: 217 89% 61%; /* #4285F4 */
+        --google-blue-600: 217 89% 55%;
+        --google-blue-700: 217 89% 48%;
+        --google-blue-800: 217 89% 42%;
+        --google-blue-900: 217 89% 35%;
+        
+        --google-green-50: 142 76% 96%;
+        --google-green-100: 142 71% 92%;
+        --google-green-200: 142 69% 85%;
+        --google-green-300: 142 69% 75%;
+        --google-green-400: 142 69% 65%;
+        --google-green-500: 142 69% 58%; /* #34A853 */
+        --google-green-600: 142 69% 52%;
+        --google-green-700: 142 69% 45%;
+        --google-green-800: 142 69% 38%;
+        --google-green-900: 142 69% 30%;
+        
+        --google-yellow-50: 48 96% 96%;
+        --google-yellow-100: 48 96% 92%;
+        --google-yellow-200: 48 96% 85%;
+        --google-yellow-300: 48 96% 75%;
+        --google-yellow-400: 48 96% 65%;
+        --google-yellow-500: 48 96% 58%; /* #FBBC04 */
+        --google-yellow-600: 48 96% 52%;
+        --google-yellow-700: 48 96% 45%;
+        --google-yellow-800: 48 96% 38%;
+        --google-yellow-900: 48 96% 30%;
+        
+        --google-red-50: 4 96% 97%;
+        --google-red-100: 4 90% 94%;
+        --google-red-200: 4 90% 88%;
+        --google-red-300: 4 90% 78%;
+        --google-red-400: 4 90% 68%;
+        --google-red-500: 4 90% 58%; /* #EA4335 */
+        --google-red-600: 4 90% 52%;
+        --google-red-700: 4 90% 45%;
+        --google-red-800: 4 90% 38%;
+        --google-red-900: 4 90% 30%;
+        
+        --google-orange-50: 25 100% 97%;
+        --google-orange-100: 25 100% 94%;
+        --google-orange-200: 25 100% 88%;
+        --google-orange-300: 25 100% 78%;
+        --google-orange-400: 25 100% 68%;
+        --google-orange-500: 25 100% 58%; /* #FF9800 */
+        --google-orange-600: 25 100% 52%;
+        --google-orange-700: 25 100% 45%;
+        --google-orange-800: 25 100% 38%;
+        --google-orange-900: 25 100% 30%;
+        
+        --google-purple-50: 262 100% 97%;
+        --google-purple-100: 262 100% 94%;
+        --google-purple-200: 262 100% 88%;
+        --google-purple-300: 262 100% 78%;
+        --google-purple-400: 262 100% 68%;
+        --google-purple-500: 262 100% 58%; /* #9C27B0 */
+        --google-purple-600: 262 100% 52%;
+        --google-purple-700: 262 100% 45%;
+        --google-purple-800: 262 100% 38%;
+        --google-purple-900: 262 100% 30%;
+        
+        --google-indigo-50: 231 100% 97%;
+        --google-indigo-100: 231 100% 94%;
+        --google-indigo-200: 231 100% 88%;
+        --google-indigo-300: 231 100% 78%;
+        --google-indigo-400: 231 100% 68%;
+        --google-indigo-500: 231 100% 58%; /* #3F51B5 */
+        --google-indigo-600: 231 100% 52%;
+        --google-indigo-700: 231 100% 45%;
+        --google-indigo-800: 231 100% 38%;
+        --google-indigo-900: 231 100% 30%;
+        
+        /* Material Design Border Radius */
+        --radius-sm: 0.25rem; /* 4px */
+        --radius-md: 0.5rem; /* 8px */
+        --radius-lg: 0.75rem; /* 12px */
+        --radius-xl: 1rem; /* 16px */
+        --radius-2xl: 1.5rem; /* 24px */
+        --radius-3xl: 1.75rem; /* 28px */
+        
+        /* Material Design Transitions */
+        --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+@layer base {
+    * {
+        border-color: hsl(var(--border));
+    }
+
+    body {
+        background: linear-gradient(135deg, #fffffe 0%, #e3f6f5 50%, #bae8e8 100%);
+        color: #272343;
+        font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        min-height: 100vh;
+    }
+    
+    /* Material Design Typography */
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: 500;
+        letter-spacing: 0;
+        font-family: 'Noto Sans JP', sans-serif;
+        color: #000000;
+    }
+    
+    /* すべてのテキストを黒色に */
+    p, span, div, a, label, button, input, textarea, select {
+        color: #000000;
+    }
+    
+    /* リンクの色も黒に */
+    a {
+        color: #000000;
+    }
+    
+    a:hover {
+        color: #000000;
+        opacity: 0.8;
+    }
+    
+}
+
+/* Material Design Elevation Shadows - Direct CSS classes */
+.elevation-0 {
+    box-shadow: none;
+}
+
+.elevation-1 {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.elevation-2 {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.elevation-3 {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.19), 0 3px 5px rgba(0, 0, 0, 0.23);
+}
+
+.elevation-4 {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.elevation-6 {
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.elevation-8 {
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+}
+
+/* Material Design Button Classes */
+.btn-md-filled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: hsl(var(--google-blue-500));
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 200ms;
+}
+
+.btn-md-filled:hover {
+    background-color: hsl(var(--google-blue-600));
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-md-filled:active {
+    background-color: hsl(var(--google-blue-700));
+}
+
+.btn-md-filled:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-md-outlined {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 2px solid hsl(var(--google-blue-500));
+    color: hsl(var(--google-blue-500));
+    background-color: transparent;
+    transition: all 200ms;
+}
+
+.btn-md-outlined:hover {
+    background-color: hsl(var(--google-blue-50));
+}
+
+.btn-md-outlined:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-md-text {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: hsl(var(--google-blue-500));
+    transition: all 200ms;
+}
+
+.btn-md-text:hover {
+    background-color: hsl(var(--google-blue-50));
+}
+
+.btn-md-text:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-md-tonal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: hsl(var(--google-blue-100));
+    color: hsl(var(--google-blue-700));
+    transition: all 200ms;
+}
+
+.btn-md-tonal:hover {
+    background-color: hsl(var(--google-blue-200));
+}
+
+.btn-md-tonal:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Material Design Card Classes */
+.card-md {
+    border-radius: 0.75rem;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: box-shadow 200ms;
+}
+
+.card-md:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.card-md-static {
+    border-radius: 0.75rem;
+    background-color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.card-md-outlined {
+    border-radius: 0.75rem;
+    background-color: white;
+    border: 1px solid hsl(var(--google-gray-300));
+    transition: box-shadow 200ms;
+}
+
+.card-md-outlined:hover {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+/* Material Design Input Classes */
+.input-md {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid hsl(var(--google-gray-300));
+    background-color: white;
+    font-size: 0.875rem;
+    color: hsl(var(--foreground));
+    transition: all 200ms;
+}
+
+.input-md:focus {
+    outline: none;
+    border-color: hsl(var(--google-blue-500));
+    box-shadow: 0 0 0 2px hsl(var(--google-blue-100));
+}
+
+.input-md:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.input-md::placeholder {
+    color: hsl(var(--google-gray-500));
+}
+
+/* Material Design Chip Classes */
+.chip-md-filled {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background-color: hsl(var(--google-gray-200));
+    color: hsl(var(--google-gray-800));
+}
+
+.chip-md-outlined {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid hsl(var(--google-gray-300));
+    color: hsl(var(--google-gray-800));
+}
+
+.chip-md-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background-color: hsl(var(--google-blue-500));
+    color: white;
+}
+
+/* スタッフスケジュール表のstickyヘッダー対応 */
+.staff-schedule-table-wrapper {
+    overflow-x: auto;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+}
+
+/* テーブルヘッダーのstickyを確実に動作させる */
+.staff-schedule-table-wrapper table thead {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.staff-schedule-table-wrapper table thead th {
+    position: sticky !important;
+    top: 0 !important;
+    background-color: hsl(var(--muted)) !important;
+}
+
+.staff-schedule-table-wrapper table thead th:first-child {
+    left: 0 !important;
+    z-index: 60 !important;
+}
+
+.staff-schedule-table-wrapper table thead th:not(:first-child) {
+    z-index: 50 !important;
+}
+
+/* スマホでのsticky表示を確実にする */
+@media (max-width: 768px) {
+    .staff-schedule-table-wrapper {
+        position: relative;
+    }
+
+    .staff-schedule-table-wrapper table thead th {
+        position: sticky !important;
+        top: 0 !important;
+        background-color: hsl(var(--muted)) !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* 印刷スタイル（A4サイズ） */
+@media print {
+    @page {
+        size: A4;
+        margin: 10mm;
+    }
+
+    body {
+        background: white;
+    }
+
+    /* 印刷時に非表示にする要素 */
+    .no-print,
+    .no-print *,
+    button:not(.print-button) {
+        display: none !important;
+    }
+
+    /* スケジュール表をA4に収める */
+    .print-container {
+        width: 100%;
+        max-width: 100%;
+        overflow: visible;
+    }
+
+    /* テーブルをA4に収める */
+    table {
+        width: 100% !important;
+        font-size: 10px !important;
+        border-collapse: collapse;
+        page-break-inside: avoid;
+    }
+
+    /* セルのサイズを調整 */
+    th, td {
+        padding: 2px 4px !important;
+        font-size: 10px !important;
+        border: 1px solid #000 !important;
+    }
+
+    /* 日付列を固定幅に */
+    th:first-child,
+    td:first-child {
+        width: 50px !important;
+        min-width: 50px !important;
+        max-width: 50px !important;
+    }
+
+    /* スタッフ名列を固定幅に */
+    th:not(:first-child),
+    td:not(:first-child) {
+        width: auto !important;
+        min-width: 60px !important;
+        max-width: 60px !important;
+    }
+
+    /* セル内のテキストを調整 */
+    td div {
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+    }
+
+    /* ヘッダーとフッターを非表示 */
+    header,
+    .header,
+    footer,
+    .footer {
+        display: none !important;
+    }
+
+    /* カードの余白を削除 */
+    .card,
+    .card-content,
+    .card-header {
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    /* ボタンとコントロールを非表示 */
+    .button-container,
+    .controls,
+    .action-buttons {
+        display: none !important;
+    }
+}

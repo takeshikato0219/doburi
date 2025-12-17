@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1763902542416,
+      "tag": "0000_funny_namorita",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1763988081103,
+      "tag": "0001_quiet_mister_sinister",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1763992902214,
+      "tag": "0002_massive_tombstone",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1764630118719,
+      "tag": "0003_add_include_in_analytics_to_vehicles",
+      "breakpoints": true
+    }
+  ]
+}
