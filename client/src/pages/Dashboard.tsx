@@ -56,10 +56,31 @@ export default function Dashboard() {
     const excessiveWorkUsers: any[] = [];
     // この警告は過剰に表示されるため、クエリも無効化しています
     // const { data: missingAttendanceUsers } = trpc.analytics.getMissingAttendanceUsers.useQuery();
-    const { data: workRecordIssues, error: workRecordIssuesError, isLoading: workRecordIssuesLoading } = trpc.analytics.getWorkRecordIssues.useQuery(undefined, {
-        retry: false,
-        refetchOnWindowFocus: false,
-    });
+    // 作業記録管理不備の取得を完全に無効化（サンプルページのため）
+    // const { data: workRecordIssues, error: workRecordIssuesError, isLoading: workRecordIssuesLoading } = trpc.analytics.getWorkRecordIssues.useQuery(undefined, {
+    //     retry: false,
+    //     refetchOnWindowFocus: false,
+    // });
+    const workRecordIssues: any[] = [];
+    const workRecordIssuesError = null;
+    const workRecordIssuesLoading = false;
+    
+    // 案件ごとの作業時間を取得
+    const { data: vehicleProductionTimes } = trpc.analytics.getVehicleProductionTimes.useQuery();
+    
+    // 昨日の総合作業時間を取得
+    const { data: totalWorkTimeYesterday } = trpc.analytics.getTotalWorkTimeTodayYesterday.useQuery();
+    
+    // 時間をフォーマットする関数
+    const formatMinutes = (minutes: number) => {
+        if (!minutes || minutes === 0) return "0分";
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        if (hours > 0) {
+            return `${hours}時間${mins}分`;
+        }
+        return `${mins}分`;
+    };
     // 今日の作業記録を入れていない人の警告は不要のため、クエリを無効化
     // const { data: usersWithoutWorkRecords } = trpc.analytics.getUsersWithoutWorkRecords.useQuery();
     const usersWithoutWorkRecords: any[] = [];
@@ -393,78 +414,120 @@ export default function Dashboard() {
                 </Card>
             )} */}
 
-            {/* デバッグ用：エラー表示 */}
-            {workRecordIssuesError && (
-                <Card className="card-md border-l-4 border-l-[hsl(var(--google-yellow-500))] bg-[hsl(var(--google-yellow-50))]">
-                    <CardContent className="p-4 sm:p-6">
-                        <p className="text-[hsl(var(--google-yellow-900))] text-sm">
-                            作業記録管理不備の取得エラー: {workRecordIssuesError.message}
-                        </p>
-                    </CardContent>
-                </Card>
-            )}
-
-            {/* デバッグ用：ローディング状態表示 */}
-            {workRecordIssuesLoading && (
-                <Card className="card-md bg-[hsl(var(--google-gray-50))]">
-                    <CardContent className="p-4 sm:p-6">
-                        <p className="text-[hsl(var(--google-gray-900))] text-sm">作業記録管理不備を取得中...</p>
-                    </CardContent>
-                </Card>
-            )}
-
-            {/* デバッグ用：データが空の場合の表示 */}
-            {!workRecordIssuesLoading && workRecordIssues && workRecordIssues.length === 0 && (
+            {/* 昨日の総合作業時間 */}
+            {totalWorkTimeYesterday && totalWorkTimeYesterday.yesterday && (
                 <Card className="card-md border-l-4 border-l-[hsl(var(--google-blue-500))] bg-[hsl(var(--google-blue-50))]">
-                    <CardContent className="p-4 sm:p-6">
-                        <p className="text-[hsl(var(--google-blue-900))] text-sm">作業記録管理不備はありません</p>
-                        {process.env.NODE_ENV === "development" && (
-                            <details className="mt-2">
-                                <summary className="text-xs text-blue-700 cursor-pointer">デバッグ情報を表示</summary>
-                                <pre className="text-xs mt-2 p-2 bg-blue-100 rounded overflow-auto max-h-40">
-                                    {JSON.stringify(workRecordIssues, null, 2)}
-                                </pre>
-                            </details>
-                        )}
+                    <CardHeader>
+                        <CardTitle className="text-lg sm:text-xl flex items-center gap-2">
+                            <Clock className="w-5 h-5" />
+                            昨日の総合作業時間
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-2">
+                            {totalWorkTimeYesterday.yesterday.length > 0 ? (
+                                <>
+                                    <div className="text-2xl sm:text-3xl font-bold text-[hsl(var(--google-blue-900))]">
+                                        {formatMinutes(
+                                            totalWorkTimeYesterday.yesterday.reduce(
+                                                (sum, item) => sum + item.totalMinutes,
+                                                0
+                                            )
+                                        )}
+                                    </div>
+                                    <div className="mt-4 space-y-1">
+                                        <p className="text-sm font-medium text-[hsl(var(--google-blue-900))]">大分類別:</p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                            {totalWorkTimeYesterday.yesterday.map((item, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className="flex justify-between items-center p-2 bg-white rounded border"
+                                                >
+                                                    <span className="text-sm text-[hsl(var(--google-blue-900))]">
+                                                        {item.majorCategory}
+                                                    </span>
+                                                    <span className="text-sm font-semibold text-[hsl(var(--google-blue-700))]">
+                                                        {formatMinutes(item.totalMinutes)}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <p className="text-sm text-[hsl(var(--muted-foreground))]">昨日の作業記録はありません</p>
+                            )}
+                        </div>
                     </CardContent>
                 </Card>
             )}
 
-            {/* 作業記録管理不備がある人（4日以内、当日除く） */}
-            {!workRecordIssuesLoading && workRecordIssues && workRecordIssues.length > 0 && (
-                <Card className="card-md border-l-4 border-l-[hsl(var(--google-red-500))] bg-[hsl(var(--google-red-50))]">
-                    <CardContent className="p-4 sm:p-6 space-y-1">
-                        <p className="font-medium text-[hsl(var(--google-red-900))] text-sm sm:text-base">
-                            作業記録管理不備があります（過去4日）
-                        </p>
-                        <ul className="list-disc pl-5 space-y-1 text-xs sm:text-sm text-red-900">
-                            {workRecordIssues.flatMap((u) =>
-                                u.dates.map((d: string) => (
-                                    <li key={`${u.userId}-${d}`}>
-                                        <Link
-                                            href={`/work-report-issues?userId=${u.userId}&workDate=${d}&type=issue`}
-                                            className="hover:underline cursor-pointer hover:text-red-950 transition-colors block py-1 px-2 -mx-2 rounded hover:bg-red-100"
-                                        >
-                                            <span className="font-semibold">{u.userName}</span>
-                                            <span>
-                                                さんが
-                                                {format(new Date(d), "MM/dd")}
-                                                日の作業記録管理に不備があります
-                                            </span>
-                                            <span className="text-[10px] ml-2 text-red-700">（クリックして修正）</span>
-                                        </Link>
-                                    </li>
-                                ))
-                            )}
-                        </ul>
-                        {process.env.NODE_ENV === "development" && (
-                            <details className="mt-2">
-                                <summary className="text-xs text-red-700 cursor-pointer">デバッグ情報を表示</summary>
-                                <pre className="text-xs mt-2 p-2 bg-red-100 rounded overflow-auto max-h-40">
-                                    {JSON.stringify(workRecordIssues, null, 2)}
-                                </pre>
-                            </details>
-                        )}
+            {/* 案件ごとの作業時間 */}
+            {vehicleProductionTimes && vehicleProductionTimes.length > 0 && (
+                <Card className="card-md border-l-4 border-l-[hsl(var(--google-green-500))] bg-[hsl(var(--google-green-50))]">
+                    <CardHeader>
+                        <CardTitle className="text-lg sm:text-xl flex items-center gap-2">
+                            <Home className="w-5 h-5" />
+                            案件ごとの作業時間
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-3">
+                            {vehicleProductionTimes
+                                .filter((v: any) => v.totalMinutes > 0)
+                                .sort((a: any, b: any) => b.totalMinutes - a.totalMinutes)
+                                .slice(0, 10)
+                                .map((vehicle: any) => (
+                                    <div
+                                        key={vehicle.vehicleId}
+                                        className="p-3 bg-white rounded-lg border border-[hsl(var(--google-green-200))] hover:shadow-md transition-shadow"
+                                    >
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="flex-1">
+                                                <p className="font-semibold text-base sm:text-lg text-[hsl(var(--google-green-900))]">
+                                                    {vehicle.vehicleNumber}
+                                                </p>
+                                                {vehicle.customerName && (
+                                                    <p className="text-sm text-[hsl(var(--muted-foreground))] mt-1">
+                                                        {vehicle.customerName}
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-xl sm:text-2xl font-bold text-[hsl(var(--google-green-700))]">
+                                                    {formatMinutes(vehicle.totalMinutes)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {vehicle.processes && vehicle.processes.length > 0 && (
+                                            <div className="mt-2 pt-2 border-t border-[hsl(var(--google-green-200))]">
+                                                <p className="text-xs font-medium text-[hsl(var(--google-green-800))] mb-1">
+                                                    工程別:
+                                                </p>
+                                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1">
+                                                    {vehicle.processes
+                                                        .filter((p: any) => p.totalMinutes > 0)
+                                                        .sort((a: any, b: any) => b.totalMinutes - a.totalMinutes)
+                                                        .slice(0, 6)
+                                                        .map((process: any, idx: number) => (
+                                                            <div
+                                                                key={idx}
+                                                                className="text-xs p-1 bg-[hsl(var(--google-green-100))] rounded"
+                                                            >
+                                                                <span className="text-[hsl(var(--google-green-900))]">
+                                                                    {process.processName}:
+                                                                </span>
+                                                                <span className="ml-1 font-semibold text-[hsl(var(--google-green-700))]">
+                                                                    {formatMinutes(process.totalMinutes)}
+                                                                </span>
+                                                            </div>
+                                                        ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                        </div>
                     </CardContent>
                 </Card>
             )}
