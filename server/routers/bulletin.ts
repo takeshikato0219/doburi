@@ -155,13 +155,12 @@ export const bulletinRouter = createTRPCRouter({
         }),
 
     // 最新の掲示板メッセージを取得（上位20件）
+    // サンプルページのため、データベース接続エラー時は空配列を返す
     list: protectedProcedure.query(async () => {
         const db = await getDb();
         if (!db) {
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "データベースに接続できません",
-            });
+            console.warn("[bulletin.list] データベースに接続できません。空配列を返します。");
+            return [];
         }
 
         // テーブルとカラムを安全に用意
