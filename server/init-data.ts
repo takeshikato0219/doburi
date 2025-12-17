@@ -1015,6 +1015,205 @@ async function initializeSampleData(db: any) {
             console.warn("[Init] Failed to initialize sample delivery schedules:", error);
         }
 
+        // 13. 車両メモ（vehicleMemos）のサンプルデータ
+        try {
+            const existingMemos = await db
+                .select({ id: schema.vehicleMemos.id })
+                .from(schema.vehicleMemos)
+                .limit(1000);
+
+            if (existingMemos.length > 0) {
+                const { inArray } = await import("drizzle-orm");
+                const memoIds = existingMemos.map(m => m.id);
+                await db.delete(schema.vehicleMemos).where(inArray(schema.vehicleMemos.id, memoIds));
+                console.log(`[Init] Deleted ${existingMemos.length} existing vehicle memos`);
+            }
+
+            const sampleVehicles = await db
+                .select({ id: schema.vehicles.id, vehicleNumber: schema.vehicles.vehicleNumber })
+                .from(schema.vehicles)
+                .where(like(schema.vehicles.vehicleNumber, "家-%"))
+                .limit(20);
+
+            const staffUsers = await db
+                .select({ id: schema.users.id, name: schema.users.name })
+                .from(schema.users)
+                .where(eq(schema.users.role, "field_worker"))
+                .limit(10);
+
+            if (sampleVehicles.length > 0 && staffUsers.length > 0) {
+                const memos = [];
+                const memoMessages = [
+                    "基礎工事が完了しました。次は下地工事に進みます。",
+                    "電気工事の配線が完了しました。コンセントの設置をお願いします。",
+                    "水道工事の給排水管接続が完了しました。",
+                    "内装工事の壁紙貼りが完了しました。",
+                    "外装工事の外壁施工が完了しました。",
+                    "設備工事のエアコン設置が完了しました。",
+                    "最終確認の清掃が完了しました。",
+                    "納車準備が整いました。",
+                    "外注先からの連絡がありました。確認をお願いします。",
+                    "希望ナンバーの手続きが完了しました。",
+                ];
+
+                for (let i = 0; i < Math.min(sampleVehicles.length, 20); i++) {
+                    const vehicle = sampleVehicles[i];
+                    const user = staffUsers[i % staffUsers.length];
+                    const message = memoMessages[i % memoMessages.length];
+                    const createdAt = new Date("2024-12-01T09:00:00+09:00");
+                    createdAt.setDate(createdAt.getDate() + (i % 10)); // 日付をずらす
+
+                    memos.push({
+                        vehicleId: vehicle.id,
+                        userId: user.id,
+                        content: `${vehicle.vehicleNumber}: ${message}`,
+                        createdAt,
+                    });
+                }
+
+                if (memos.length > 0) {
+                    await db.insert(schema.vehicleMemos).values(memos);
+                    console.log(`[Init] ✅ Created ${memos.length} sample vehicle memos`);
+                }
+            }
+        } catch (error) {
+            console.warn("[Init] Failed to initialize sample vehicle memos:", error);
+        }
+
+        // 14. より多くの作業記録を追加（各車両に対してより詳細な作業記録）
+        try {
+            const vehicles = await db
+                .select({ id: schema.vehicles.id, vehicleNumber: schema.vehicles.vehicleNumber })
+                .from(schema.vehicles)
+                .where(like(schema.vehicles.vehicleNumber, "家-%"))
+                .limit(20);
+
+            const processes = await db
+                .select({ id: schema.processes.id, name: schema.processes.name })
+                .from(schema.processes)
+                .orderBy(schema.processes.displayOrder);
+
+            const staffUsers = await db
+                .select({ id: schema.users.id })
+                .from(schema.users)
+                .where(eq(schema.users.role, "field_worker"))
+                .limit(20);
+
+            if (vehicles.length > 0 && processes.length > 0 && staffUsers.length > 0) {
+                const additionalWorkRecords = [];
+                const baseYear = 2024;
+                const baseMonth = 11; // 12月（0-indexed）
+                const baseDay = 1;
+
+                // 各車両に対して、より詳細な作業記録を追加
+                for (let vIdx = 0; vIdx < vehicles.length; vIdx++) {
+                    const vehicle = vehicles[vIdx];
+                    
+                    // 各工程に対して作業記録を追加
+                    for (let pIdx = 0; pIdx < Math.min(processes.length, 8); pIdx++) {
+                        const process = processes[pIdx];
+                        const userId = staffUsers[(vIdx + pIdx) % staffUsers.length].id;
+                        
+                        // 各工程を複数日に分けて作業
+                        for (let dayOffset = 0; dayOffset < 3; dayOffset++) {
+                            const workDate = new Date(baseYear, baseMonth, baseDay + (vIdx * 2) + dayOffset);
+                            const workMinutes = 60 + (pIdx * 30) + (dayOffset * 20); // 60分〜240分
+                            
+                            const startTime = new Date(workDate);
+                            startTime.setHours(8 + pIdx, 0, 0, 0);
+                            
+                            const endTime = new Date(startTime);
+                            endTime.setMinutes(endTime.getMinutes() + workMinutes);
+
+                            additionalWorkRecords.push({
+                                userId,
+                                vehicleId: vehicle.id,
+                                processId: process.id,
+                                startTime,
+                                endTime,
+                                workDescription: `${process.name}作業（${vehicle.vehicleNumber}）`,
+                            });
+                        }
+                    }
+                }
+
+                if (additionalWorkRecords.length > 0) {
+                    // バッチで挿入（1000件ずつ）
+                    for (let i = 0; i < additionalWorkRecords.length; i += 1000) {
+                        const batch = additionalWorkRecords.slice(i, i + 1000);
+                        await db.insert(schema.workRecords).values(batch);
+                    }
+                    console.log(`[Init] ✅ Created ${additionalWorkRecords.length} additional sample work records`);
+                }
+            }
+        } catch (error) {
+            console.warn("[Init] Failed to initialize additional work records:", error);
+        }
+
+        // 15. より多くのチェック項目データを追加
+        try {
+            const vehicles = await db
+                .select({ id: schema.vehicles.id })
+                .from(schema.vehicles)
+                .where(like(schema.vehicles.vehicleNumber, "家-%"))
+                .limit(20);
+
+            const checkItems = await db
+                .select({ id: schema.checkItems.id })
+                .from(schema.checkItems)
+                .where(eq(schema.checkItems.category, "一般"))
+                .limit(20);
+
+            const staffUsers = await db
+                .select({ id: schema.users.id })
+                .from(schema.users)
+                .where(eq(schema.users.role, "field_worker"))
+                .limit(10);
+
+            if (vehicles.length > 0 && checkItems.length > 0 && staffUsers.length > 0) {
+                const additionalChecks = [];
+                const baseDate = new Date("2024-12-01T09:00:00+09:00");
+
+                for (let vIdx = 0; vIdx < vehicles.length; vIdx++) {
+                    const vehicle = vehicles[vIdx];
+                    
+                    // 各車両に対して、より多くのチェック項目を追加
+                    for (let cIdx = 0; cIdx < Math.min(checkItems.length, 15); cIdx++) {
+                        const checkItem = checkItems[cIdx];
+                        const checkedBy = staffUsers[(vIdx + cIdx) % staffUsers.length].id;
+                        
+                        const checkedAt = new Date(baseDate);
+                        checkedAt.setDate(checkedAt.getDate() + vIdx);
+                        checkedAt.setHours(9 + (cIdx % 8), 0, 0, 0);
+
+                        const rand = Math.random();
+                        let status: "checked" | "needs_recheck" | "unchecked" = "checked";
+                        if (rand < 0.15) {
+                            status = "needs_recheck";
+                        } else if (rand < 0.20) {
+                            status = "unchecked";
+                        }
+
+                        additionalChecks.push({
+                            vehicleId: vehicle.id,
+                            checkItemId: checkItem.id,
+                            checkedBy,
+                            checkedAt,
+                            status,
+                            notes: status === "needs_recheck" ? "再確認が必要です" : status === "checked" ? "問題ありません" : null,
+                        });
+                    }
+                }
+
+                if (additionalChecks.length > 0) {
+                    await db.insert(schema.vehicleChecks).values(additionalChecks);
+                    console.log(`[Init] ✅ Created ${additionalChecks.length} additional sample vehicle checks`);
+                }
+            }
+        } catch (error) {
+            console.warn("[Init] Failed to initialize additional vehicle checks:", error);
+        }
+
         console.log("[Init] Sample data initialization completed");
     } catch (error) {
         console.warn("[Init] Failed to initialize sample data:", error);
