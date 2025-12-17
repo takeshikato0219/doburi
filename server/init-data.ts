@@ -145,17 +145,146 @@ async function initializeVehicleTypes(db: any) {
  */
 async function initializeSampleData(db: any) {
     try {
-        console.log("[Init] Initializing sample data (users, vehicles, checkItems)...");
+        console.log("[Init] ========== サンプルデータ初期化開始 ==========");
+        console.log("[Init] Database connection:", db ? "OK" : "FAILED");
+        
+        if (!db) {
+            console.error("[Init] ❌ Database connection failed, cannot initialize sample data");
+            return;
+        }
 
-        // 1. スタッフサンプル 40人
+        // サンプルデータを強制的に再作成するため、既存データを削除
+        console.log("[Init] 既存のサンプルデータを削除中...");
+        
         try {
-            const existingSampleUsers = await db
-                .select({ username: schema.users.username })
-                .from(schema.users)
-                .where(like(schema.users.username, "sample_staff%"))
-                .limit(1);
+            // 既存のサンプル車両とその関連データを削除
+            const { inArray } = await import("drizzle-orm");
+            const existingSampleVehicles = await db
+                .select({ id: schema.vehicles.id })
+                .from(schema.vehicles)
+                .where(like(schema.vehicles.vehicleNumber, "家-%"));
+            
+            if (existingSampleVehicles.length > 0) {
+                const vehicleIds = existingSampleVehicles.map(v => v.id);
+                console.log(`[Init] 既存のサンプル車両 ${existingSampleVehicles.length}件を削除中...`);
+                
+                // 関連データを削除
+                await db.delete(schema.workRecords).where(inArray(schema.workRecords.vehicleId, vehicleIds));
+                await db.delete(schema.vehicleChecks).where(inArray(schema.vehicleChecks.vehicleId, vehicleIds));
+                await db.delete(schema.vehicleMemos).where(inArray(schema.vehicleMemos.vehicleId, vehicleIds));
+                await db.delete(schema.checkRequests).where(inArray(schema.checkRequests.vehicleId, vehicleIds));
+                
+                // 車両を削除
+                await db.delete(schema.vehicles).where(inArray(schema.vehicles.id, vehicleIds));
+                console.log(`[Init] ✅ 既存のサンプル車両 ${existingSampleVehicles.length}件を削除しました`);
+            }
+            
+            // 既存のサンプル作業記録を削除
+            const existingWorkRecords = await db
+                .select({ id: schema.workRecords.id })
+                .from(schema.workRecords)
+                .limit(10000);
+            
+            if (existingWorkRecords.length > 0) {
+                const workRecordIds = existingWorkRecords.map(r => r.id);
+                await db.delete(schema.workRecords).where(inArray(schema.workRecords.id, workRecordIds));
+                console.log(`[Init] ✅ 既存の作業記録 ${existingWorkRecords.length}件を削除しました`);
+            }
+            
+            // 既存の出退勤記録を削除
+            const existingAttendanceRecords = await db
+                .select({ id: schema.attendanceRecords.id })
+                .from(schema.attendanceRecords)
+                .limit(10000);
+            
+            if (existingAttendanceRecords.length > 0) {
+                const attendanceIds = existingAttendanceRecords.map(r => r.id);
+                await db.delete(schema.attendanceRecords).where(inArray(schema.attendanceRecords.id, attendanceIds));
+                console.log(`[Init] ✅ 既存の出退勤記録 ${existingAttendanceRecords.length}件を削除しました`);
+            }
+            
+            // 既存のチェック項目を削除（サンプル用）
+            const existingSampleCheckItems = await db
+                .select({ id: schema.checkItems.id })
+                .from(schema.checkItems)
+                .where(like(schema.checkItems.name, "基礎%"));
+            
+            if (existingSampleCheckItems.length > 0) {
+                const checkItemIds = existingSampleCheckItems.map(item => item.id);
+                await db.delete(schema.vehicleChecks).where(inArray(schema.vehicleChecks.checkItemId, checkItemIds));
+                await db.delete(schema.checkItems).where(inArray(schema.checkItems.id, checkItemIds));
+                console.log(`[Init] ✅ 既存のサンプルチェック項目 ${existingSampleCheckItems.length}件を削除しました`);
+            }
+            
+            // 既存のサンプルデータを削除
+            const existingSalesBroadcasts = await db
+                .select({ id: schema.salesBroadcasts.id })
+                .from(schema.salesBroadcasts)
+                .limit(1000);
+            
+            if (existingSalesBroadcasts.length > 0) {
+                const broadcastIds = existingSalesBroadcasts.map(b => b.id);
+                await db.delete(schema.salesBroadcastReads).where(inArray(schema.salesBroadcastReads.broadcastId, broadcastIds));
+                await db.delete(schema.salesBroadcasts).where(inArray(schema.salesBroadcasts.id, broadcastIds));
+                console.log(`[Init] ✅ 既存の営業拡散 ${existingSalesBroadcasts.length}件を削除しました`);
+            }
+            
+            // 既存のチェック依頼を削除
+            const existingCheckRequests = await db
+                .select({ id: schema.checkRequests.id })
+                .from(schema.checkRequests)
+                .limit(1000);
+            
+            if (existingCheckRequests.length > 0) {
+                const requestIds = existingCheckRequests.map(r => r.id);
+                await db.delete(schema.checkRequests).where(inArray(schema.checkRequests.id, requestIds));
+                console.log(`[Init] ✅ 既存のチェック依頼 ${existingCheckRequests.length}件を削除しました`);
+            }
+            
+        } catch (deleteError) {
+            console.warn("[Init] 既存データの削除でエラーが発生しましたが、続行します:", deleteError);
+        }
 
-            if (existingSampleUsers.length === 0) {
+        console.log("[Init] ========== 新しいサンプルデータを作成開始 ==========");
+
+        // 1. スタッフサンプル 20人（既存のユーザーを確認して、不足分のみ追加）
+        try {
+            const existingUsers = await db
+                .select({ id: schema.users.id, username: schema.users.username })
+                .from(schema.users)
+                .where(eq(schema.users.role, "field_worker"))
+                .limit(25);
+            
+            console.log(`[Init] 既存のスタッフユーザー: ${existingUsers.length}人`);
+            
+            // 20人未満の場合は追加
+            if (existingUsers.length < 20) {
+                const needCount = 20 - existingUsers.length;
+                console.log(`[Init] ${needCount}人のスタッフユーザーを追加します`);
+                
+                const passwordHash = await bcrypt.hash("password", 10);
+                const newUsers = [];
+                for (let i = existingUsers.length + 1; i <= 20; i++) {
+                    const no = String(i).padStart(3, "0");
+                    newUsers.push({
+                        username: `user${no}`,
+                        password: passwordHash,
+                        name: `スタッフ${no}`,
+                        role: "field_worker" as const,
+                    });
+                }
+                
+                if (newUsers.length > 0) {
+                    await db.insert(schema.users).values(newUsers);
+                    console.log(`[Init] ✅ ${newUsers.length}人のスタッフユーザーを追加しました`);
+                }
+            } else {
+                console.log(`[Init] ✅ スタッフユーザーは既に20人以上存在します`);
+            }
+        } catch (error) {
+            console.error("[Init] ❌ スタッフユーザーの初期化でエラー:", error);
+            // エラーをログに記録するが、処理は続行
+        }
                 const passwordHash = await bcrypt.hash("password", 10);
                 const sampleUsers = [];
                 for (let i = 1; i <= 40; i++) {
@@ -482,7 +611,7 @@ async function initializeSampleData(db: any) {
                     { category: "一般" as const, majorCategory: "設備", minorCategory: "その他", name: "最終清掃の確認", description: "最終清掃が完了しているか確認します", displayOrder: 30 },
                 ];
                 
-            await db.insert(schema.checkItems).values(sampleCheckItems);
+                await db.insert(schema.checkItems).values(sampleCheckItems);
             console.log("[Init] ✅ Created 30 realistic check items for house construction");
         } catch (error) {
             console.warn("[Init] Failed to initialize sample check items:", error);
@@ -563,7 +692,7 @@ async function initializeSampleData(db: any) {
                     if (vehicleChecks.length > 0) {
                         await db.insert(schema.vehicleChecks).values(vehicleChecks);
                         console.log(`[Init] ✅ Created ${vehicleChecks.length} sample vehicle checks`);
-                    } else {
+            } else {
                         console.warn("[Init] No vehicle checks to insert");
                     }
                 }
