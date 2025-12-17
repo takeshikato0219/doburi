@@ -390,13 +390,12 @@ export const checksRouter = createTRPCRouter({
         }),
 
     // チェック依頼一覧取得（自分宛の依頼）
+    // サンプルページのため、データベース接続エラー時は空配列を返す
     getMyCheckRequests: protectedProcedure.query(async ({ ctx }) => {
         const db = await getDb();
         if (!db) {
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "データベースに接続できません",
-            });
+            console.warn("[checks.getMyCheckRequests] データベースに接続できません。空配列を返します。");
+            return [];
         }
 
         const requests = await db

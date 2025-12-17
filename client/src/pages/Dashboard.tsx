@@ -45,10 +45,22 @@ export default function Dashboard() {
     const { data: todayAttendance } = trpc.attendance.getTodayStatus.useQuery({
         workDate: todayStrForAttendance,
     });
-    const { data: myCheckRequests } = trpc.checks.getMyCheckRequests.useQuery();
-    const { data: unreadBroadcasts, refetch: refetchBroadcasts } = trpc.salesBroadcasts.getUnread.useQuery();
-    const { data: bulletinMessages, refetch: refetchBulletin } = trpc.bulletin.list.useQuery();
-    const { data: vehicleTypes } = trpc.vehicleTypes.list.useQuery();
+    // サンプルページのため、データベース接続エラーを避けるため無効化
+    // const { data: myCheckRequests } = trpc.checks.getMyCheckRequests.useQuery();
+    const myCheckRequests: any[] = [];
+    
+    const { data: unreadBroadcasts, refetch: refetchBroadcasts } = trpc.salesBroadcasts.getUnread.useQuery(undefined, {
+        retry: false,
+        refetchOnWindowFocus: false,
+    });
+    const { data: bulletinMessages, refetch: refetchBulletin } = trpc.bulletin.list.useQuery(undefined, {
+        retry: false,
+        refetchOnWindowFocus: false,
+    });
+    const { data: vehicleTypes } = trpc.vehicleTypes.list.useQuery(undefined, {
+        retry: false,
+        refetchOnWindowFocus: false,
+    });
     // 一時的に完全にコメントアウトして問題を切り分け
     // const { data: recentLowWorkUsers } = trpc.analytics.getRecentLowWorkUsers.useQuery();
     // const { data: excessiveWorkUsers } = trpc.analytics.getExcessiveWorkUsers.useQuery();
@@ -85,20 +97,10 @@ export default function Dashboard() {
     // const { data: usersWithoutWorkRecords } = trpc.analytics.getUsersWithoutWorkRecords.useQuery();
     const usersWithoutWorkRecords: any[] = [];
 
-    // デバッグ用：workRecordIssuesの状態をログ出力
-    React.useEffect(() => {
-        if (workRecordIssuesError) {
-            console.error("[Dashboard] getWorkRecordIssues エラー:", workRecordIssuesError);
-        }
-        if (workRecordIssues) {
-            console.log("[Dashboard] getWorkRecordIssues 結果:", workRecordIssues);
-            console.log("[Dashboard] getWorkRecordIssues 結果の長さ:", workRecordIssues.length);
-            if (workRecordIssues.length > 0) {
-                console.log("[Dashboard] 不備の詳細:", JSON.stringify(workRecordIssues, null, 2));
-            }
-        }
-    }, [workRecordIssues, workRecordIssuesError]);
-    const { data: myNotifications, refetch: refetchNotifications } = trpc.notifications.getMyUnread.useQuery();
+    // サンプルページのため、データベース接続エラーを避けるため無効化
+    // const { data: myNotifications, refetch: refetchNotifications } = trpc.notifications.getMyUnread.useQuery();
+    const myNotifications: any[] = [];
+    const refetchNotifications = () => {};
     const [selectedVehicleTypeFilter, setSelectedVehicleTypeFilter] = useState<number | "all">("all");
 
     // 未完了のチェック依頼を取得

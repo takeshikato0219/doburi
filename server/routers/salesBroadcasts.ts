@@ -51,13 +51,12 @@ export const salesBroadcastsRouter = createTRPCRouter({
         }),
 
     // 未読の営業からの拡散を取得（自分が読んでいないもの）
+    // サンプルページのため、データベース接続エラー時は空配列を返す
     getUnread: protectedProcedure.query(async ({ ctx }) => {
         const db = await getDb();
         if (!db) {
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "データベースに接続できません",
-            });
+            console.warn("[salesBroadcasts.getUnread] データベースに接続できません。空配列を返します。");
+            return [];
         }
 
         // 有効期限内の拡散を取得

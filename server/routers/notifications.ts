@@ -6,13 +6,12 @@ import { eq, desc } from "drizzle-orm";
 
 export const notificationsRouter = createTRPCRouter({
     // 自分宛ての未読通知一覧
+    // サンプルページのため、データベース接続エラー時は空配列を返す
     getMyUnread: protectedProcedure.query(async ({ ctx }) => {
         const db = await getDb();
         if (!db) {
-            throw new TRPCError({
-                code: "INTERNAL_SERVER_ERROR",
-                message: "データベースに接続できません",
-            });
+            console.warn("[notifications.getMyUnread] データベースに接続できません。空配列を返します。");
+            return [];
         }
 
         const rows = await db
