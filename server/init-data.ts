@@ -4,35 +4,89 @@ import { getDb, schema } from "./db";
 import { ENV } from "./_core/env";
 
 export async function initializeInitialData() {
-    const db = await getDb();
+    console.log("[Init] ========== 初期データ初期化開始 ==========");
+    
+    // データベース接続を試行（複数回リトライ）
+    let db = await getDb();
+    let retryCount = 0;
+    const maxRetries = 5;
+    
+    while (!db && retryCount < maxRetries) {
+        retryCount++;
+        console.log(`[Init] データベース接続試行 ${retryCount}/${maxRetries}...`);
+        await new Promise(resolve => setTimeout(resolve, 2000)); // 2秒待機
+        db = await getDb();
+    }
+    
     if (!db) {
-        console.warn("[Init] Database not available, skipping initialization");
+        console.error("[Init] ❌ データベース接続に失敗しました。サンプルデータは作成されません。");
+        console.error("[Init] データベース接続を確認してください。");
         return;
     }
+    
+    console.log("[Init] ✅ データベース接続成功");
 
     try {
         // 1. 初期ユーザーの作成
+        console.log("[Init] ステップ1: 初期ユーザーの作成...");
+        try {
         await initializeUsers(db);
-
-        // 2. 初期工程の作成
-        await initializeProcesses(db);
-
-        // 3. 初期車種の作成
-        await initializeVehicleTypes(db);
-
-        // 4. サンプルデータを投入（環境変数で制御可能、デフォルトは常に実行）
-        const shouldInitSampleData = process.env.INIT_SAMPLE_DATA !== "false";
-        console.log(`[Init] NODE_ENV: ${process.env.NODE_ENV}, isProduction: ${ENV.isProduction}, INIT_SAMPLE_DATA: ${process.env.INIT_SAMPLE_DATA ?? "undefined (default: true)"}`);
-        if (shouldInitSampleData) {
-            console.log("[Init] Initializing sample data...");
-            await initializeSampleData(db);
-        } else {
-            console.log("[Init] Skipping sample data initialization (INIT_SAMPLE_DATA=false)");
+            console.log("[Init] ✅ ステップ1完了: 初期ユーザー");
+        } catch (error) {
+            console.error("[Init] ❌ ステップ1エラー:", error);
+            // エラーが発生しても続行
         }
 
-        console.log("[Init] Initial data initialized successfully");
+        // 2. 初期工程の作成
+        console.log("[Init] ステップ2: 初期工程の作成...");
+        try {
+        await initializeProcesses(db);
+            console.log("[Init] ✅ ステップ2完了: 初期工程");
+        } catch (error) {
+            console.error("[Init] ❌ ステップ2エラー:", error);
+            // エラーが発生しても続行
+        }
+
+        // 3. 初期車種の作成
+        console.log("[Init] ステップ3: 初期車種の作成...");
+        try {
+            await initializeVehicleTypes(db);
+            console.log("[Init] ✅ ステップ3完了: 初期車種");
+        } catch (error) {
+            console.error("[Init] ❌ ステップ3エラー:", error);
+            // エラーが発生しても続行
+        }
+
+        // 4. サンプルデータを投入（常に実行）
+        console.log("[Init] ステップ4: サンプルデータの作成...");
+        const shouldInitSampleData = process.env.INIT_SAMPLE_DATA !== "false";
+        console.log(`[Init] NODE_ENV: ${process.env.NODE_ENV}, isProduction: ${ENV.isProduction}, INIT_SAMPLE_DATA: ${process.env.INIT_SAMPLE_DATA ?? "undefined (default: true)"}`);
+        
+        if (shouldInitSampleData) {
+            console.log("[Init] サンプルデータを初期化します...");
+            try {
+            await initializeSampleData(db);
+                console.log("[Init] ✅ ステップ4完了: サンプルデータ");
+            } catch (error) {
+                console.error("[Init] ❌ ステップ4エラー（サンプルデータ）:", error);
+                if (error instanceof Error) {
+                    console.error("[Init] エラーメッセージ:", error.message);
+                    console.error("[Init] エラースタック:", error.stack);
+                }
+                // エラーが発生しても続行
+            }
+        } else {
+            console.log("[Init] サンプルデータの初期化をスキップしました (INIT_SAMPLE_DATA=false)");
+        }
+
+        console.log("[Init] ========== 初期データ初期化完了 ==========");
     } catch (error) {
-        console.error("[Init] Failed to initialize initial data:", error);
+        console.error("[Init] ========== 初期データ初期化で重大なエラー ==========");
+        console.error("[Init] エラー詳細:", error);
+        if (error instanceof Error) {
+            console.error("[Init] エラーメッセージ:", error.message);
+            console.error("[Init] エラースタック:", error.stack);
+        }
     }
 }
 
@@ -144,14 +198,16 @@ async function initializeVehicleTypes(db: any) {
  * - チェック項目: サンプルチェック01〜サンプルチェック30
  */
 async function initializeSampleData(db: any) {
+    console.log("[Init] ========== サンプルデータ初期化開始 ==========");
+    console.log("[Init] Database connection:", db ? "OK" : "FAILED");
+    
+    if (!db) {
+        console.error("[Init] ❌ Database connection failed, cannot initialize sample data");
+        return;
+    }
+    
+    // 全体をtry-catchで囲み、エラーが発生しても処理を続行
     try {
-        console.log("[Init] ========== サンプルデータ初期化開始 ==========");
-        console.log("[Init] Database connection:", db ? "OK" : "FAILED");
-        
-        if (!db) {
-            console.error("[Init] ❌ Database connection failed, cannot initialize sample data");
-            return;
-        }
 
         // サンプルデータを強制的に再作成するため、既存データを削除
         console.log("[Init] 既存のサンプルデータを削除中...");
@@ -284,25 +340,6 @@ async function initializeSampleData(db: any) {
         } catch (error) {
             console.error("[Init] ❌ スタッフユーザーの初期化でエラー:", error);
             // エラーをログに記録するが、処理は続行
-        }
-                const passwordHash = await bcrypt.hash("password", 10);
-                const sampleUsers = [];
-                for (let i = 1; i <= 40; i++) {
-                    const no = String(i).padStart(2, "0");
-                    sampleUsers.push({
-                        username: `sample_staff${no}`,
-                        password: passwordHash,
-                        name: `スタッフ${no}`,
-                        role: "field_worker" as const,
-                    });
-                }
-                await db.insert(schema.users).values(sampleUsers);
-                console.log("[Init] Created 40 sample staff users (sample_staff01-sample_staff40/password)");
-            } else {
-                console.log("[Init] Sample staff users already exist, skipping");
-            }
-        } catch (error) {
-            console.warn("[Init] Failed to initialize sample staff users:", error);
         }
 
         // 2. 車両サンプル（大工が家を作っている想定でわかりやすい名前）
@@ -1343,9 +1380,15 @@ async function initializeSampleData(db: any) {
             console.warn("[Init] Failed to initialize additional vehicle checks:", error);
         }
 
-        console.log("[Init] Sample data initialization completed");
+        console.log("[Init] ========== サンプルデータ初期化完了 ==========");
     } catch (error) {
-        console.warn("[Init] Failed to initialize sample data:", error);
+        console.error("[Init] ========== サンプルデータ初期化で重大なエラー ==========");
+        console.error("[Init] エラー詳細:", error);
+        if (error instanceof Error) {
+            console.error("[Init] エラーメッセージ:", error.message);
+            console.error("[Init] エラースタック:", error.stack);
+        }
+        // エラーが発生しても処理は続行（既に作成されたデータは残る）
     }
 }
 
