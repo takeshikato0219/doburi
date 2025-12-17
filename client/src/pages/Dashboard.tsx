@@ -69,10 +69,7 @@ export default function Dashboard() {
     // この警告は過剰に表示されるため、クエリも無効化しています
     // const { data: missingAttendanceUsers } = trpc.analytics.getMissingAttendanceUsers.useQuery();
     // 作業記録管理不備の取得を完全に無効化（サンプルページのため）
-    // const { data: workRecordIssues, error: workRecordIssuesError, isLoading: workRecordIssuesLoading } = trpc.analytics.getWorkRecordIssues.useQuery(undefined, {
-    //     retry: false,
-    //     refetchOnWindowFocus: false,
-    // });
+    // エラーを非表示にするため、クエリを呼ばずに空配列を返す
     const workRecordIssues: any[] = [];
     const workRecordIssuesError = null;
     const workRecordIssuesLoading = false;
@@ -153,7 +150,7 @@ export default function Dashboard() {
         // utils.analytics.getExcessiveWorkUsers.invalidate();
         // utils.analytics.getRecentLowWorkUsers.invalidate();
         // utils.analytics.getMissingAttendanceUsers.invalidate(); // この警告は非表示のため無効化
-        utils.analytics.getWorkRecordIssues.invalidate();
+        // utils.analytics.getWorkRecordIssues.invalidate(); // サンプルページのため無効化
     }, [utils]);
 
     // 日付が変わったらデータを更新
