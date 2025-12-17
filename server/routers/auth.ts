@@ -122,11 +122,22 @@ export const authRouter = createTRPCRouter({
                 console.log("[Auth] ========== LoginAs attempt ==========");
                 console.log("[Auth] Role:", input.role);
 
-                const pool = getPool();
-                if (!pool) {
+                // データベース接続を初期化
+                const db = await getDb();
+                if (!db) {
+                    console.error("[Auth] ❌ Database connection failed");
                     throw new TRPCError({
                         code: "INTERNAL_SERVER_ERROR",
-                        message: "データベースに接続できません",
+                        message: "データベースに接続できません。環境変数を確認してください。",
+                    });
+                }
+
+                const pool = getPool();
+                if (!pool) {
+                    console.error("[Auth] ❌ Pool is null after getDb()");
+                    throw new TRPCError({
+                        code: "INTERNAL_SERVER_ERROR",
+                        message: "データベース接続プールが作成できませんでした。",
                     });
                 }
 
