@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { createTRPCRouter, publicProcedure } from "../_core/trpc";
-import { getUserByUsername, getPool } from "../db";
+import { getUserByUsername, getPool, getDb } from "../db";
 import { setAuthCookie, clearAuthCookie } from "../_core/cookies";
 
 export const authRouter = createTRPCRouter({
