@@ -1893,7 +1893,12 @@ export const analyticsRouter = createTRPCRouter({
     // - 4日以内（当日は除く）に出勤した人
     // - 勤務時間 - 作業記録時間 = ±1時間を超えている
     // - または、出勤したけど作業報告を入れていない人
+    // サンプルページのため無効化
     getWorkRecordIssues: protectedProcedure.query(async () => {
+        console.log("[getWorkRecordIssues] サンプルページのため無効化されています");
+        return [];
+        // 以下は無効化
+        /*
         console.log("[getWorkRecordIssues] 開始");
         const db = await getDb();
         if (!db) {

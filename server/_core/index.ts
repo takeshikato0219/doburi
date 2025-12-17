@@ -93,10 +93,10 @@ async function startServer() {
     }
   };
 
-  // 期限切れ拡散の自動削除を1時間ごとに実行
-  setInterval(deleteExpiredBroadcasts, 60 * 60 * 1000);
+  // 期限切れ拡散の自動削除を1時間ごとに実行（サンプルページのため無効化）
+  // setInterval(deleteExpiredBroadcasts, 60 * 60 * 1000);
   // 起動時にも実行
-  deleteExpiredBroadcasts();
+  // deleteExpiredBroadcasts();
 
   // 1週間以上前のふみかチェック記録を削除する処理
   const deleteOldWorkRecordIssueClears = async () => {
@@ -134,10 +134,10 @@ async function startServer() {
     }
   };
 
-  // 1週間以上前のふみかチェック記録の自動削除を1時間ごとに実行
-  setInterval(deleteOldWorkRecordIssueClears, 60 * 60 * 1000);
+  // 1週間以上前のふみかチェック記録の自動削除を1時間ごとに実行（サンプルページのため無効化）
+  // setInterval(deleteOldWorkRecordIssueClears, 60 * 60 * 1000);
   // 起動時にも実行
-  deleteOldWorkRecordIssueClears();
+  // deleteOldWorkRecordIssueClears();
 
   // 自動バックアップ処理（毎日午前3時に実行）
   const scheduleAutoBackup = async () => {
@@ -175,10 +175,10 @@ async function startServer() {
     console.log(`[Server] 次回の自動バックアップを ${nextBackup.toLocaleString("ja-JP")} にスケジュールしました`);
   };
 
-  // 初回実行（起動時にもバックアップを作成）
-  scheduleAutoBackup();
+  // 初回実行（起動時にもバックアップを作成）（サンプルページのため無効化）
+  // scheduleAutoBackup();
   // 毎日3時に実行されるようにスケジュール
-  scheduleNextBackup();
+  // scheduleNextBackup();
 
   // 23:59での自動退勤処理を設定
   const scheduleAutoClose = async () => {
@@ -271,19 +271,19 @@ async function startServer() {
     console.log(`[Server] 次回の自動退勤処理を ${next2359.toLocaleString("ja-JP")} にスケジュールしました`);
   };
 
-  // 23:59:00に正確に実行されるようにスケジュール
-  scheduleNextAutoClose();
+  // 23:59:00に正確に実行されるようにスケジュール（サンプルページのため無効化）
+  // scheduleNextAutoClose();
 
-  // 念のため、1分ごとにもチェック（バックアップ）
-  setInterval(() => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    // 23:59以降の場合、自動退勤処理を実行
-    if (hours === 23 && minutes >= 59) {
-      scheduleAutoClose();
-    }
-  }, 60 * 1000);
+  // 念のため、1分ごとにもチェック（バックアップ）（サンプルページのため無効化）
+  // setInterval(() => {
+  //   const now = new Date();
+  //   const hours = now.getHours();
+  //   const minutes = now.getMinutes();
+  //   // 23:59以降の場合、自動退勤処理を実行
+  //   if (hours === 23 && minutes >= 59) {
+  //     scheduleAutoClose();
+  //   }
+  // }, 60 * 1000);
 
   const app = express();
   const server = createServer(app);
@@ -320,7 +320,7 @@ async function startServer() {
     serveStatic(app);
   }
 
-  const preferredPort = parseInt(process.env.PORT || "8700");
+  const preferredPort = parseInt(process.env.PORT || "9500");
   const port = await findAvailablePort(preferredPort);
 
   if (port !== preferredPort) {

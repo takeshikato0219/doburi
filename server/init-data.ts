@@ -213,67 +213,28 @@ async function initializeSampleData(db: any) {
                 console.error("[Init] Please ensure vehicle types are initialized before sample data.");
                 } else {
                     const vehicleTypeId = vehicleTypes[0].id;
+                    // 建設現場のサンプルデータ（20件の家）
                     const houseNames = [
-                        { 
-                            number: "001", 
-                            customer: "田中太郎さんの家", 
-                            minutes: 480,
-                            desiredDeliveryDate: new Date("2024-12-15"),
-                            checkDueDate: new Date("2024-12-10"),
-                            hasCoating: "yes" as const,
-                            hasLine: "no" as const,
-                            hasPreferredNumber: "yes" as const,
-                            hasTireReplacement: "no" as const,
-                            outsourcingDestination: "外注先A",
-                        },
-                        { 
-                            number: "002", 
-                            customer: "佐藤花子さんの家", 
-                            minutes: 720,
-                            desiredDeliveryDate: new Date("2024-12-20"),
-                            checkDueDate: new Date("2024-12-15"),
-                            hasCoating: "no" as const,
-                            hasLine: "yes" as const,
-                            hasPreferredNumber: "no" as const,
-                            hasTireReplacement: "summer" as const,
-                            outsourcingDestination: "外注先B",
-                        },
-                        { 
-                            number: "003", 
-                            customer: "鈴木一郎さんの家", 
-                            minutes: 360,
-                            desiredDeliveryDate: new Date("2024-12-18"),
-                            checkDueDate: new Date("2024-12-12"),
-                            hasCoating: "yes" as const,
-                            hasLine: "yes" as const,
-                            hasPreferredNumber: "yes" as const,
-                            hasTireReplacement: "winter" as const,
-                            outsourcingDestination: null,
-                        },
-                        { 
-                            number: "004", 
-                            customer: "山田次郎さんの家", 
-                            minutes: 600,
-                            desiredDeliveryDate: new Date("2024-12-25"),
-                            checkDueDate: new Date("2024-12-20"),
-                            hasCoating: "no" as const,
-                            hasLine: "no" as const,
-                            hasPreferredNumber: "no" as const,
-                            hasTireReplacement: "no" as const,
-                            outsourcingDestination: "外注先C",
-                        },
-                        { 
-                            number: "005", 
-                            customer: "中村三郎さんの家", 
-                            minutes: 240,
-                            desiredDeliveryDate: new Date("2024-12-12"),
-                            checkDueDate: new Date("2024-12-08"),
-                            hasCoating: "yes" as const,
-                            hasLine: "no" as const,
-                            hasPreferredNumber: "no" as const,
-                            hasTireReplacement: "no" as const,
-                            outsourcingDestination: null,
-                        },
+                        { number: "001", customer: "田中太郎さんの家", minutes: 480, desiredDeliveryDate: new Date("2024-12-15"), checkDueDate: new Date("2024-12-10"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
+                        { number: "002", customer: "佐藤花子さんの家", minutes: 720, desiredDeliveryDate: new Date("2024-12-20"), checkDueDate: new Date("2024-12-15"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
+                        { number: "003", customer: "鈴木一郎さんの家", minutes: 360, desiredDeliveryDate: new Date("2024-12-18"), checkDueDate: new Date("2024-12-12"), hasCoating: "yes" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
+                        { number: "004", customer: "山田次郎さんの家", minutes: 600, desiredDeliveryDate: new Date("2024-12-25"), checkDueDate: new Date("2024-12-20"), hasCoating: "no" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先C" },
+                        { number: "005", customer: "中村三郎さんの家", minutes: 240, desiredDeliveryDate: new Date("2024-12-12"), checkDueDate: new Date("2024-12-08"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: null },
+                        { number: "006", customer: "伊藤四郎さんの家", minutes: 540, desiredDeliveryDate: new Date("2024-12-22"), checkDueDate: new Date("2024-12-17"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
+                        { number: "007", customer: "高橋五郎さんの家", minutes: 420, desiredDeliveryDate: new Date("2024-12-16"), checkDueDate: new Date("2024-12-11"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
+                        { number: "008", customer: "渡辺六郎さんの家", minutes: 680, desiredDeliveryDate: new Date("2024-12-28"), checkDueDate: new Date("2024-12-23"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
+                        { number: "009", customer: "斎藤七郎さんの家", minutes: 380, desiredDeliveryDate: new Date("2024-12-14"), checkDueDate: new Date("2024-12-09"), hasCoating: "yes" as const, hasLine: "yes" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先C" },
+                        { number: "010", customer: "小林八郎さんの家", minutes: 520, desiredDeliveryDate: new Date("2024-12-19"), checkDueDate: new Date("2024-12-14"), hasCoating: "no" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
+                        { number: "011", customer: "加藤九郎さんの家", minutes: 460, desiredDeliveryDate: new Date("2024-12-17"), checkDueDate: new Date("2024-12-12"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
+                        { number: "012", customer: "吉田十郎さんの家", minutes: 640, desiredDeliveryDate: new Date("2024-12-26"), checkDueDate: new Date("2024-12-21"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
+                        { number: "013", customer: "山本十一さんの家", minutes: 340, desiredDeliveryDate: new Date("2024-12-13"), checkDueDate: new Date("2024-12-08"), hasCoating: "yes" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先C" },
+                        { number: "014", customer: "松本十二さんの家", minutes: 580, desiredDeliveryDate: new Date("2024-12-24"), checkDueDate: new Date("2024-12-19"), hasCoating: "no" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
+                        { number: "015", customer: "井上十三さんの家", minutes: 400, desiredDeliveryDate: new Date("2024-12-15"), checkDueDate: new Date("2024-12-10"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
+                        { number: "016", customer: "木村十四さんの家", minutes: 700, desiredDeliveryDate: new Date("2024-12-29"), checkDueDate: new Date("2024-12-24"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
+                        { number: "017", customer: "林十五さんの家", minutes: 320, desiredDeliveryDate: new Date("2024-12-11"), checkDueDate: new Date("2024-12-06"), hasCoating: "yes" as const, hasLine: "yes" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先C" },
+                        { number: "018", customer: "斉藤十六さんの家", minutes: 560, desiredDeliveryDate: new Date("2024-12-21"), checkDueDate: new Date("2024-12-16"), hasCoating: "no" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
+                        { number: "019", customer: "田村十七さんの家", minutes: 440, desiredDeliveryDate: new Date("2024-12-16"), checkDueDate: new Date("2024-12-11"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
+                        { number: "020", customer: "中島十八さんの家", minutes: 620, desiredDeliveryDate: new Date("2024-12-27"), checkDueDate: new Date("2024-12-22"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
                     ];
                     const sampleVehicles = [];
                     for (const house of houseNames) {
@@ -294,7 +255,7 @@ async function initializeSampleData(db: any) {
                         });
                     }
                     await db.insert(schema.vehicles).values(sampleVehicles);
-                    console.log("[Init] ✅ Created 5 sample vehicles (家-001〜家-005)");
+                    console.log("[Init] ✅ Created 20 sample vehicles (家-001〜家-020)");
                     
                     // 3. 作業記録のサンプルデータを追加
                     try {
@@ -342,22 +303,14 @@ async function initializeSampleData(db: any) {
                             
                             const workRecords = [];
                             
-                            // 今日の日付を基準に、過去7日間分のサンプルデータを作成
-                            // 毎回初期化時に再作成することで、常に最新の7日間分が表示される
-                            const today = new Date();
-                            const jstFormatter = new Intl.DateTimeFormat('ja-JP', {
-                                timeZone: 'Asia/Tokyo',
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit',
-                            });
-                            const jstParts = jstFormatter.formatToParts(today);
-                            const year = parseInt(jstParts.find(p => p.type === 'year')?.value || '2024');
-                            const month = parseInt(jstParts.find(p => p.type === 'month')?.value || '12') - 1;
-                            const day = parseInt(jstParts.find(p => p.type === 'day')?.value || '10');
+                            // サンプルページのため、固定日付を使用（2024年12月1日から1ヶ月分）
+                            // 日付が進まないように固定値を設定
+                            const baseYear = 2024;
+                            const baseMonth = 11; // 12月（0-indexed）
+                            const baseDay = 1;
                             
-                            // 基準日を今日の7日前に設定（1週間分のデータを確保）
-                            const baseDate = new Date(year, month, day - 7, 8, 0, 0);
+                            // 基準日を2024年12月1日に設定（1ヶ月分のデータを作成）
+                            const baseDate = new Date(baseYear, baseMonth, baseDay, 8, 0, 0);
                             
                             // houseNamesを再定義（スコープの問題を回避）
                             const houseNamesMap = new Map([
@@ -368,12 +321,12 @@ async function initializeSampleData(db: any) {
                                 ["005", { minutes: 240 }],
                             ]);
                             
-                            // 各ユーザー（管理者とスタッフ）に対して、過去7日間分の作業記録を作成
+                            // 各ユーザー（管理者とスタッフ）に対して、1ヶ月分（30日間）の作業記録を作成
                             for (let userIdx = 0; userIdx < Math.min(allUsers.length, 21); userIdx++) {
                                 const userId = allUsers[userIdx].id;
                                 
-                                // 各日付に対して作業記録を作成（7日間分）
-                                for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
+                                // 各日付に対して作業記録を作成（30日間分）
+                                for (let dayOffset = 0; dayOffset < 30; dayOffset++) {
                                     const workDate = new Date(baseDate);
                                     workDate.setDate(workDate.getDate() + dayOffset);
                                     
@@ -666,18 +619,99 @@ async function initializeSampleData(db: any) {
             console.warn("[Init] Failed to update user display names:", error);
         }
 
-        // 6. ユーザー名を ID に合わせてリネーム（ID1→admin, ID2→user001, ..., ID42→user041）
+        // 6. ユーザー名を ID に合わせてリネーム（ID1→admin, ID2→user001, ..., ID21→user020）
         try {
-            for (let id = 1; id <= 42; id++) {
+            for (let id = 1; id <= 21; id++) {
                 const username = id === 1 ? "admin" : `user${String(id - 1).padStart(3, "0")}`;
                 await db
                     .update(schema.users)
                     .set({ username })
                     .where(eq(schema.users.id, id));
             }
-            console.log("[Init] Updated usernames for users id 1-42 (admin, user001-user041)");
+            console.log("[Init] Updated usernames for users id 1-21 (admin, user001-user020)");
         } catch (error) {
             console.warn("[Init] Failed to update usernames:", error);
+        }
+
+        // 7. 出退勤記録のサンプルデータを追加（1ヶ月分、20人規模）
+        try {
+            // 既存の出退勤記録を削除
+            const existingAttendanceRecords = await db
+                .select({ id: schema.attendanceRecords.id })
+                .from(schema.attendanceRecords)
+                .limit(10000);
+
+            if (existingAttendanceRecords.length > 0) {
+                const { inArray } = await import("drizzle-orm");
+                const recordIds = existingAttendanceRecords.map(r => r.id);
+                await db.delete(schema.attendanceRecords).where(inArray(schema.attendanceRecords.id, recordIds));
+                console.log(`[Init] Deleted ${existingAttendanceRecords.length} existing attendance records`);
+            }
+
+            // スタッフユーザーを取得（20人）
+            const staffUsers = await db
+                .select({ id: schema.users.id, name: schema.users.name })
+                .from(schema.users)
+                .where(eq(schema.users.role, "field_worker"))
+                .limit(20);
+
+            if (staffUsers.length > 0) {
+                const attendanceRecords = [];
+                // 固定日付：2024年12月1日から30日間
+                const baseYear = 2024;
+                const baseMonth = 11; // 12月（0-indexed）
+                const baseDay = 1;
+
+                // 各スタッフに対して、1ヶ月分（30日間）の出退勤記録を作成
+                for (const user of staffUsers) {
+                    for (let dayOffset = 0; dayOffset < 30; dayOffset++) {
+                        const workDate = new Date(baseYear, baseMonth, baseDay + dayOffset);
+                        const workDateStr = `${workDate.getFullYear()}-${String(workDate.getMonth() + 1).padStart(2, "0")}-${String(workDate.getDate()).padStart(2, "0")}`;
+                        
+                        // 土日は出勤しない（簡易的な実装）
+                        const dayOfWeek = workDate.getDay();
+                        if (dayOfWeek === 0 || dayOfWeek === 6) {
+                            continue; // 土日はスキップ
+                        }
+
+                        // 出勤時刻：8:00〜9:00の間でランダム
+                        const clockInHour = 8 + Math.floor(Math.random() * 2); // 8時または9時
+                        const clockInMinute = Math.floor(Math.random() * 60); // 0〜59分
+                        const clockInTime = `${String(clockInHour).padStart(2, "0")}:${String(clockInMinute).padStart(2, "0")}`;
+
+                        // 退勤時刻：17:00〜18:00の間でランダム
+                        const clockOutHour = 17 + Math.floor(Math.random() * 2); // 17時または18時
+                        const clockOutMinute = Math.floor(Math.random() * 60); // 0〜59分
+                        const clockOutTime = `${String(clockOutHour).padStart(2, "0")}:${String(clockOutMinute).padStart(2, "0")}`;
+
+                        // 勤務時間を計算（分）
+                        const clockInTotalMinutes = clockInHour * 60 + clockInMinute;
+                        const clockOutTotalMinutes = clockOutHour * 60 + clockOutMinute;
+                        const workMinutes = clockOutTotalMinutes - clockInTotalMinutes - 80; // 80分の休憩時間を差し引く
+
+                        attendanceRecords.push({
+                            userId: user.id,
+                            workDate: workDateStr as any,
+                            clockInTime,
+                            clockOutTime,
+                            workMinutes: Math.max(0, workMinutes),
+                            clockInDevice: "pc" as const,
+                            clockOutDevice: "pc" as const,
+                        });
+                    }
+                }
+
+                if (attendanceRecords.length > 0) {
+                    // バッチで挿入（1000件ずつ）
+                    for (let i = 0; i < attendanceRecords.length; i += 1000) {
+                        const batch = attendanceRecords.slice(i, i + 1000);
+                        await db.insert(schema.attendanceRecords).values(batch);
+                    }
+                    console.log(`[Init] ✅ Created ${attendanceRecords.length} sample attendance records (1 month, 20 staff)`);
+                }
+            }
+        } catch (error) {
+            console.warn("[Init] Failed to initialize sample attendance records:", error);
         }
 
         console.log("[Init] Sample data initialization completed");
