@@ -17,9 +17,12 @@ export const ENV = {
     awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? "",
 };
 
-// デバッグ用：環境変数の状態をログに出力（本番環境では機密情報をマスク）
-if (process.env.NODE_ENV !== "production" || process.env.DEBUG_ENV === "true") {
-    console.log("[ENV] MYSQL_URL:", process.env.MYSQL_URL ? "set (length: " + process.env.MYSQL_URL.length + ")" : "not set");
-    console.log("[ENV] DATABASE_URL:", process.env.DATABASE_URL ? "set (length: " + process.env.DATABASE_URL.length + ")" : "not set");
-    console.log("[ENV] Using databaseUrl:", ENV.databaseUrl ? "set (length: " + ENV.databaseUrl.length + ")" : "not set");
+// デバッグ用：環境変数の状態をログに出力（本番環境でも表示）
+console.log("[ENV] MYSQL_URL:", process.env.MYSQL_URL ? "set (length: " + process.env.MYSQL_URL.length + ")" : "not set");
+console.log("[ENV] DATABASE_URL:", process.env.DATABASE_URL ? "set (length: " + process.env.DATABASE_URL.length + ")" : "not set");
+if (ENV.databaseUrl) {
+    const maskedUrl = ENV.databaseUrl.replace(/:([^:@]+)@/, ":****@");
+    console.log("[ENV] Using databaseUrl:", maskedUrl);
+} else {
+    console.log("[ENV] Using databaseUrl: not set");
 }
