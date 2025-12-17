@@ -714,6 +714,307 @@ async function initializeSampleData(db: any) {
             console.warn("[Init] Failed to initialize sample attendance records:", error);
         }
 
+        // 8. 営業からの拡散（salesBroadcasts）のサンプルデータ
+        try {
+            const existingBroadcasts = await db
+                .select({ id: schema.salesBroadcasts.id })
+                .from(schema.salesBroadcasts)
+                .limit(1000);
+
+            if (existingBroadcasts.length > 0) {
+                const { inArray } = await import("drizzle-orm");
+                const broadcastIds = existingBroadcasts.map(b => b.id);
+                await db.delete(schema.salesBroadcasts).where(inArray(schema.salesBroadcasts.id, broadcastIds));
+                console.log(`[Init] Deleted ${existingBroadcasts.length} existing sales broadcasts`);
+            }
+
+            const sampleVehiclesForBroadcast = await db
+                .select({ id: schema.vehicles.id, vehicleNumber: schema.vehicles.vehicleNumber })
+                .from(schema.vehicles)
+                .where(like(schema.vehicles.vehicleNumber, "家-%"))
+                .limit(10);
+
+            const adminUser = await db
+                .select({ id: schema.users.id })
+                .from(schema.users)
+                .where(eq(schema.users.role, "admin"))
+                .limit(1);
+
+            if (sampleVehiclesForBroadcast.length > 0 && adminUser.length > 0) {
+                const broadcasts = [];
+                const messages = [
+                    "納車予定日が近づいています。最終確認をお願いします。",
+                    "外注先からの連絡がありました。確認をお願いします。",
+                    "コーティング作業が完了しました。最終チェックをお願いします。",
+                    "希望ナンバーの手続きが完了しました。",
+                    "タイヤ交換作業が完了しました。",
+                ];
+
+                for (let i = 0; i < Math.min(sampleVehiclesForBroadcast.length, 5); i++) {
+                    const vehicle = sampleVehiclesForBroadcast[i];
+                    const expiresAt = new Date("2024-12-31T23:59:59"); // 固定日付
+                    broadcasts.push({
+                        vehicleId: vehicle.id,
+                        createdBy: adminUser[0].id,
+                        message: messages[i % messages.length],
+                        expiresAt,
+                    });
+                }
+
+                if (broadcasts.length > 0) {
+                    await db.insert(schema.salesBroadcasts).values(broadcasts);
+                    console.log(`[Init] ✅ Created ${broadcasts.length} sample sales broadcasts`);
+                }
+            }
+        } catch (error) {
+            console.warn("[Init] Failed to initialize sample sales broadcasts:", error);
+        }
+
+        // 9. 掲示板メッセージ（bulletinMessages）のサンプルデータ
+        try {
+            // テーブルが存在するか確認
+            const { sql } = await import("drizzle-orm");
+            try {
+                await db.execute(sql`SELECT 1 FROM \`bulletinMessages\` LIMIT 1`);
+            } catch (error: any) {
+                // テーブルが存在しない場合は作成
+                if (error?.code === 'ER_NO_SUCH_TABLE' || error?.message?.includes("doesn't exist")) {
+                    await db.execute(sql`
+                        CREATE TABLE IF NOT EXISTS \`bulletinMessages\` (
+                            \`id\` int NOT NULL AUTO_INCREMENT,
+                            \`userId\` int NOT NULL,
+                            \`message\` varchar(500) NOT NULL,
+                            \`expireDays\` int DEFAULT 5,
+                            \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                            PRIMARY KEY (\`id\`)
+                        )
+                    `);
+                }
+            }
+
+            const existingBulletins = await db.execute(sql`SELECT id FROM \`bulletinMessages\` LIMIT 1000`);
+            if (Array.isArray(existingBulletins) && existingBulletins.length > 0) {
+                const bulletinIds = existingBulletins.map((b: any) => b.id);
+                if (bulletinIds.length > 0) {
+                    await db.execute(sql`DELETE FROM \`bulletinMessages\` WHERE id IN (${sql.join(bulletinIds.map(id => sql`${id}`), sql`, `)})`);
+                    console.log(`[Init] Deleted ${bulletinIds.length} existing bulletin messages`);
+                }
+            }
+
+            const staffUsers = await db
+                .select({ id: schema.users.id })
+                .from(schema.users)
+                .where(eq(schema.users.role, "field_worker"))
+                .limit(5);
+
+            if (staffUsers.length > 0) {
+                const messages = [
+                    "本日の安全ミーティングは8:00からです。",
+                    "新しい工具が到着しました。倉庫で確認してください。",
+                    "来週の現場見学会の準備をお願いします。",
+                    "12月の納車予定が更新されました。確認をお願いします。",
+                    "年末年始の休業期間についてお知らせします。",
+                ];
+
+                for (let i = 0; i < Math.min(staffUsers.length, 5); i++) {
+                    const user = staffUsers[i];
+                    await db.execute(sql`
+                        INSERT INTO \`bulletinMessages\` (\`userId\`, \`message\`, \`expireDays\`)
+                        VALUES (${user.id}, ${messages[i]}, 5)
+                    `);
+                }
+                console.log(`[Init] ✅ Created ${Math.min(staffUsers.length, 5)} sample bulletin messages`);
+            }
+        } catch (error) {
+            console.warn("[Init] Failed to initialize sample bulletin messages:", error);
+        }
+
+        // 10. チェック依頼（checkRequests）のサンプルデータ
+        try {
+            const existingCheckRequests = await db
+                .select({ id: schema.checkRequests.id })
+                .from(schema.checkRequests)
+                .limit(1000);
+
+            if (existingCheckRequests.length > 0) {
+                const { inArray } = await import("drizzle-orm");
+                const requestIds = existingCheckRequests.map(r => r.id);
+                await db.delete(schema.checkRequests).where(inArray(schema.checkRequests.id, requestIds));
+                console.log(`[Init] Deleted ${existingCheckRequests.length} existing check requests`);
+            }
+
+            const sampleVehiclesForCheck = await db
+                .select({ id: schema.vehicles.id })
+                .from(schema.vehicles)
+                .where(like(schema.vehicles.vehicleNumber, "家-%"))
+                .limit(10);
+
+            const checkItems = await db
+                .select({ id: schema.checkItems.id })
+                .from(schema.checkItems)
+                .where(eq(schema.checkItems.category, "一般"))
+                .limit(10);
+
+            const staffUsers = await db
+                .select({ id: schema.users.id })
+                .from(schema.users)
+                .where(eq(schema.users.role, "field_worker"))
+                .limit(10);
+
+            const adminUser = await db
+                .select({ id: schema.users.id })
+                .from(schema.users)
+                .where(eq(schema.users.role, "admin"))
+                .limit(1);
+
+            if (sampleVehiclesForCheck.length > 0 && checkItems.length > 0 && staffUsers.length > 0 && adminUser.length > 0) {
+                const checkRequests = [];
+                for (let i = 0; i < Math.min(sampleVehiclesForCheck.length, 5); i++) {
+                    const vehicle = sampleVehiclesForCheck[i];
+                    const checkItem = checkItems[i % checkItems.length];
+                    const requestedTo = staffUsers[i % staffUsers.length].id;
+                    const dueDate = new Date("2024-12-31");
+
+                    checkRequests.push({
+                        vehicleId: vehicle.id,
+                        checkItemId: checkItem.id,
+                        requestedBy: adminUser[0].id,
+                        requestedTo,
+                        dueDate,
+                        message: "サンプルチェック依頼です。",
+                        status: "pending" as const,
+                    });
+                }
+
+                if (checkRequests.length > 0) {
+                    await db.insert(schema.checkRequests).values(checkRequests);
+                    console.log(`[Init] ✅ Created ${checkRequests.length} sample check requests`);
+                }
+            }
+        } catch (error) {
+            console.warn("[Init] Failed to initialize sample check requests:", error);
+        }
+
+        // 11. スタッフスケジュール（staffScheduleEntries）のサンプルデータ
+        try {
+            const { sql } = await import("drizzle-orm");
+            // テーブルが存在するか確認
+            try {
+                await db.execute(sql`SELECT 1 FROM \`staffScheduleEntries\` LIMIT 1`);
+            } catch (error: any) {
+                if (error?.code === 'ER_NO_SUCH_TABLE' || error?.message?.includes("doesn't exist")) {
+                    await db.execute(sql`
+                        CREATE TABLE IF NOT EXISTS \`staffScheduleEntries\` (
+                            \`id\` int NOT NULL AUTO_INCREMENT,
+                            \`userId\` int NOT NULL,
+                            \`scheduleDate\` date NOT NULL,
+                            \`status\` varchar(20) NOT NULL,
+                            \`comment\` varchar(500),
+                            PRIMARY KEY (\`id\`)
+                        )
+                    `);
+                }
+            }
+
+            const existingScheduleEntries = await db.execute(sql`SELECT id FROM \`staffScheduleEntries\` LIMIT 1000`);
+            if (Array.isArray(existingScheduleEntries) && existingScheduleEntries.length > 0) {
+                const entryIds = existingScheduleEntries.map((e: any) => e.id);
+                if (entryIds.length > 0) {
+                    await db.execute(sql`DELETE FROM \`staffScheduleEntries\` WHERE id IN (${sql.join(entryIds.map(id => sql`${id}`), sql`, `)})`);
+                    console.log(`[Init] Deleted ${entryIds.length} existing staff schedule entries`);
+                }
+            }
+
+            const staffUsers = await db
+                .select({ id: schema.users.id })
+                .from(schema.users)
+                .where(eq(schema.users.role, "field_worker"))
+                .limit(20);
+
+            if (staffUsers.length > 0) {
+                const baseYear = 2024;
+                const baseMonth = 11; // 12月（0-indexed）
+                const baseDay = 1;
+                const statuses = ["work", "off", "half", "leave"];
+
+                for (const user of staffUsers) {
+                    for (let dayOffset = 0; dayOffset < 30; dayOffset++) {
+                        const scheduleDate = new Date(baseYear, baseMonth, baseDay + dayOffset);
+                        const dateStr = `${scheduleDate.getFullYear()}-${String(scheduleDate.getMonth() + 1).padStart(2, "0")}-${String(scheduleDate.getDate()).padStart(2, "0")}`;
+                        
+                        // 土日は休み
+                        const dayOfWeek = scheduleDate.getDay();
+                        const status = dayOfWeek === 0 || dayOfWeek === 6 ? "off" : statuses[dayOffset % statuses.length];
+                        const comment = status === "work" ? "現場作業" : status === "off" ? "休み" : status === "half" ? "半休" : "有給";
+
+                        await db.execute(sql`
+                            INSERT INTO \`staffScheduleEntries\` (\`userId\`, \`scheduleDate\`, \`status\`, \`comment\`)
+                            VALUES (${user.id}, ${dateStr}, ${status}, ${comment})
+                        `);
+                    }
+                }
+                console.log(`[Init] ✅ Created ${staffUsers.length * 30} sample staff schedule entries (1 month, 20 staff)`);
+            }
+        } catch (error) {
+            console.warn("[Init] Failed to initialize sample staff schedule entries:", error);
+        }
+
+        // 12. 納車スケジュール（deliverySchedules）のサンプルデータ
+        try {
+            const { sql } = await import("drizzle-orm");
+            // テーブルが存在するか確認
+            try {
+                await db.execute(sql`SELECT 1 FROM \`deliverySchedules\` LIMIT 1`);
+            } catch (error: any) {
+                if (error?.code === 'ER_NO_SUCH_TABLE' || error?.message?.includes("doesn't exist")) {
+                    await db.execute(sql`
+                        CREATE TABLE IF NOT EXISTS \`deliverySchedules\` (
+                            \`id\` int NOT NULL AUTO_INCREMENT,
+                            \`vehicleId\` int NOT NULL,
+                            \`scheduledDate\` date NOT NULL,
+                            \`status\` varchar(20) NOT NULL,
+                            \`notes\` varchar(500),
+                            PRIMARY KEY (\`id\`)
+                        )
+                    `);
+                }
+            }
+
+            const existingDeliverySchedules = await db.execute(sql`SELECT id FROM \`deliverySchedules\` LIMIT 1000`);
+            if (Array.isArray(existingDeliverySchedules) && existingDeliverySchedules.length > 0) {
+                const scheduleIds = existingDeliverySchedules.map((s: any) => s.id);
+                if (scheduleIds.length > 0) {
+                    await db.execute(sql`DELETE FROM \`deliverySchedules\` WHERE id IN (${sql.join(scheduleIds.map(id => sql`${id}`), sql`, `)})`);
+                    console.log(`[Init] Deleted ${scheduleIds.length} existing delivery schedules`);
+                }
+            }
+
+            const sampleVehicles = await db
+                .select({ id: schema.vehicles.id, vehicleNumber: schema.vehicles.vehicleNumber, desiredDeliveryDate: schema.vehicles.desiredDeliveryDate })
+                .from(schema.vehicles)
+                .where(like(schema.vehicles.vehicleNumber, "家-%"))
+                .limit(20);
+
+            if (sampleVehicles.length > 0) {
+                const statuses = ["scheduled", "confirmed", "delivered", "delayed"];
+
+                for (const vehicle of sampleVehicles) {
+                    const scheduledDate = vehicle.desiredDeliveryDate || new Date("2024-12-20");
+                    const dateStr = `${scheduledDate.getFullYear()}-${String(scheduledDate.getMonth() + 1).padStart(2, "0")}-${String(scheduledDate.getDate()).padStart(2, "0")}`;
+                    const status = statuses[Math.floor(Math.random() * statuses.length)];
+                    const notes = `納車予定: ${vehicle.vehicleNumber}`;
+
+                    await db.execute(sql`
+                        INSERT INTO \`deliverySchedules\` (\`vehicleId\`, \`scheduledDate\`, \`status\`, \`notes\`)
+                        VALUES (${vehicle.id}, ${dateStr}, ${status}, ${notes})
+                    `);
+                }
+                console.log(`[Init] ✅ Created ${sampleVehicles.length} sample delivery schedules`);
+            }
+        } catch (error) {
+            console.warn("[Init] Failed to initialize sample delivery schedules:", error);
+        }
+
         console.log("[Init] Sample data initialization completed");
     } catch (error) {
         console.warn("[Init] Failed to initialize sample data:", error);
