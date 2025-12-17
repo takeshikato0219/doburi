@@ -123,12 +123,21 @@ export const authRouter = createTRPCRouter({
                 console.log("[Auth] Role:", input.role);
 
                 // データベース接続を初期化
+                console.log("[Auth] Attempting to initialize database connection...");
+                console.log("[Auth] MYSQL_URL:", process.env.MYSQL_URL ? "set" : "not set");
+                console.log("[Auth] DATABASE_URL:", process.env.DATABASE_URL ? "set" : "not set");
+                
                 const db = await getDb();
                 if (!db) {
                     console.error("[Auth] ❌ Database connection failed");
+                    const envStatus = {
+                        MYSQL_URL: process.env.MYSQL_URL ? "set" : "not set",
+                        DATABASE_URL: process.env.DATABASE_URL ? "set" : "not set",
+                    };
+                    console.error("[Auth] Environment variables status:", envStatus);
                     throw new TRPCError({
                         code: "INTERNAL_SERVER_ERROR",
-                        message: "データベースに接続できません。環境変数を確認してください。",
+                        message: `データベースに接続できません。環境変数を確認してください。MYSQL_URL: ${envStatus.MYSQL_URL}, DATABASE_URL: ${envStatus.DATABASE_URL}`,
                     });
                 }
 
