@@ -9736,9 +9736,9 @@ async function initializeSampleData(db) {
                 for (let recordIdx = 0; recordIdx < numRecordsPerDay; recordIdx++) {
                   const vehicle = vehicles2[dayOffset % vehicles2.length];
                   const process2 = processes2[recordIdx % Math.min(processes2.length, 8)];
-                  const workMinutes = 60 + recordIdx * 60 + dayOffset * 20;
+                  const workMinutes = 120 + recordIdx * 120 + dayOffset * 30;
                   const startTime = new Date(workDate);
-                  startTime.setHours(8 + recordIdx * 4, 0, 0, 0);
+                  startTime.setHours(8 + recordIdx * 3, 0, 0, 0);
                   const endTime = new Date(startTime);
                   endTime.setMinutes(endTime.getMinutes() + workMinutes);
                   workRecords2.push({
@@ -9780,11 +9780,11 @@ async function initializeSampleData(db) {
                 const process2 = processes2[i];
                 const totalMinutes2 = processMinutes[i] || 60;
                 const userId = allUsers[i % allUsers.length].id;
-                const numRecords = Math.max(1, Math.floor(totalMinutes2 / 120));
+                const numRecords = Math.max(1, Math.floor(totalMinutes2 / 240));
                 const minutesPerRecord = Math.floor(totalMinutes2 / numRecords);
                 for (let j = 0; j < numRecords; j++) {
                   const startTime = new Date(vehicleWorkDate);
-                  startTime.setHours(8 + i * 2 + j, 0, 0, 0);
+                  startTime.setHours(8 + i * 2 + j * 4, 0, 0, 0);
                   const endTime = new Date(startTime);
                   endTime.setMinutes(endTime.getMinutes() + minutesPerRecord);
                   workRecords2.push({

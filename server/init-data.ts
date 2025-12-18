@@ -539,11 +539,11 @@ async function initializeSampleData(db: any) {
                                         const vehicle = vehicles[dayOffset % vehicles.length];
                                         const process = processes[recordIdx % Math.min(processes.length, 8)];
                                         
-                                        // 作業時間を設定（60分〜180分）
-                                        const workMinutes = 60 + (recordIdx * 60) + (dayOffset * 20);
+                                        // 作業時間を設定（ゼネコン向け：120分〜480分）
+                                        const workMinutes = 120 + (recordIdx * 120) + (dayOffset * 30);
                                         
                                         const startTime = new Date(workDate);
-                                        startTime.setHours(8 + recordIdx * 4, 0, 0, 0); // 8時、12時など
+                                        startTime.setHours(8 + recordIdx * 3, 0, 0, 0); // 8時、11時、14時など
                                         
                                         const endTime = new Date(startTime);
                                         endTime.setMinutes(endTime.getMinutes() + workMinutes);
@@ -589,13 +589,13 @@ async function initializeSampleData(db: any) {
                                     const totalMinutes = processMinutes[i] || 60;
                                     const userId = allUsers[i % allUsers.length].id;
                                     
-                                    // 1つの工程を複数の作業記録に分割（2-3回に分けて作業）
-                                    const numRecords = Math.max(1, Math.floor(totalMinutes / 120)); // 2時間ごとに分割
+                                    // 1つの工程を複数の作業記録に分割（ゼネコン向け：4-6時間ごとに分割）
+                                    const numRecords = Math.max(1, Math.floor(totalMinutes / 240)); // 4時間ごとに分割
                                     const minutesPerRecord = Math.floor(totalMinutes / numRecords);
                                     
                                     for (let j = 0; j < numRecords; j++) {
                                         const startTime = new Date(vehicleWorkDate);
-                                        startTime.setHours(8 + i * 2 + j, 0, 0, 0); // 8時、9時、10時...など
+                                        startTime.setHours(8 + i * 2 + j * 4, 0, 0, 0); // 8時、12時、16時...など
                                         
                                         const endTime = new Date(startTime);
                                         endTime.setMinutes(endTime.getMinutes() + minutesPerRecord);
