@@ -1034,17 +1034,19 @@ var init_attendance = __esm({
               const clockInMinute = i * 5 % 30;
               const clockInTime = `${String(clockInHour).padStart(2, "0")}:${String(clockInMinute).padStart(2, "0")}`;
               const clockOutTime = isToday ? null : "17:30";
-              const workMinutes = isToday ? Math.floor(jstNow.hour * 60 + jstNow.minute - (clockInHour * 60 + clockInMinute)) : 480;
+              const workMinutes = isToday ? Math.max(0, Math.floor(jstNow.hour * 60 + jstNow.minute - (clockInHour * 60 + clockInMinute))) : 480;
               sampleStaff.push({
                 userId: i,
                 userName: `\u30B9\u30BF\u30C3\u30D5${i}`,
-                userUsername: `user${String(i).padStart(3, "0")}`,
-                clockIn: clockInTime,
-                clockOut: clockOutTime,
-                workDuration: workMinutes,
-                clockInDevice: "pc",
-                clockOutDevice: clockOutTime ? "pc" : null,
-                workDate: input.date
+                attendance: {
+                  id: i,
+                  workDate: input.date,
+                  clockInTime,
+                  clockOutTime,
+                  workMinutes,
+                  clockInDevice: "pc",
+                  clockOutDevice: clockOutTime ? "pc" : null
+                }
               });
             }
             return sampleStaff;

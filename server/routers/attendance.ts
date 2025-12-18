@@ -434,19 +434,21 @@ export const attendanceRouter = createTRPCRouter({
                         // 今日の場合は退勤していない、過去の場合は退勤済み
                         const clockOutTime = isToday ? null : "17:30";
                         const workMinutes = isToday 
-                            ? Math.floor((jstNow.hour * 60 + jstNow.minute) - (clockInHour * 60 + clockInMinute))
+                            ? Math.max(0, Math.floor((jstNow.hour * 60 + jstNow.minute) - (clockInHour * 60 + clockInMinute)))
                             : 480; // 8時間
                         
                         sampleStaff.push({
                             userId: i,
                             userName: `スタッフ${i}`,
-                            userUsername: `user${String(i).padStart(3, "0")}`,
-                            clockIn: clockInTime,
-                            clockOut: clockOutTime,
-                            workDuration: workMinutes,
-                            clockInDevice: "pc",
-                            clockOutDevice: clockOutTime ? "pc" : null,
-                            workDate: input.date,
+                            attendance: {
+                                id: i,
+                                workDate: input.date,
+                                clockInTime: clockInTime,
+                                clockOutTime: clockOutTime,
+                                workMinutes: workMinutes,
+                                clockInDevice: "pc",
+                                clockOutDevice: clockOutTime ? "pc" : null,
+                            },
                         });
                     }
                     
