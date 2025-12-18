@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, Link } from "wouter";
 import { useAuth } from "../hooks/useAuth";
 import { trpc } from "../lib/trpc";
@@ -21,6 +21,7 @@ import {
     CalendarDays,
     Database,
     Timer,
+    GripVertical,
 } from "lucide-react";
 
 interface AppLayoutProps {
@@ -31,6 +32,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
     const { user } = useAuth();
     const [location] = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+    const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
     // ルートが変わったときにモバイルメニューを閉じる（デスクトップでは影響なし）
     useEffect(() => {
@@ -44,7 +47,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     });
 
     // 一般メニュー（externalユーザーは除外）
-    const menuItems: Array<{
+    const defaultMenuItems: Array<{
         icon: any;
         label: string;
         path: string;
@@ -60,6 +63,33 @@ export default function AppLayout({ children }: AppLayoutProps) {
             { icon: Timer, label: "制作時間確認", path: "/vehicle-production", admin: false, excludeExternal: true },
             { icon: BarChart3, label: "統計・分析", path: "/analytics", admin: false, excludeExternal: true },
         ];
+
+    // ローカルストレージから保存された順序を読み込む
+    const [menuOrder, setMenuOrder] = useState<string[] | null>(null);
+    
+    useEffect(() => {
+        const savedOrder = localStorage.getItem("menuOrder");
+        if (savedOrder) {
+            try {
+                setMenuOrder(JSON.parse(savedOrder));
+            } catch (error) {
+                setMenuOrder(null);
+            }
+        }
+    }, []);
+    
+    const menuItems = useMemo(() => {
+        if (menuOrder) {
+            const ordered = menuOrder
+                .map((path: string) => defaultMenuItems.find(item => item.path === path))
+                .filter((item) => item !== undefined);
+            
+            // 新しいメニュー項目があれば追加
+            const newItems = defaultMenuItems.filter(item => !menuOrder.includes(item.path));
+            return [...ordered, ...newItems];
+        }
+        return defaultMenuItems;
+    }, [menuOrder]);
 
     const adminMenuItems = [
         { icon: Calendar, label: "出退勤管理", path: "/admin/attendance", admin: true },
@@ -130,24 +160,62 @@ export default function AppLayout({ children }: AppLayoutProps) {
                                 }
                                 return true;
                             })
-                            .map((item) => {
+                            .map((item, index) => {
                                 const Icon = item.icon;
                                 const isActive = location === item.path;
+                                const isDragging = draggedIndex === index;
+                                const isDragOver = dragOverIndex === index;
+                                
                                 return (
-                                    <Link key={item.path} href={item.path}>
-                                        <div
-                                            className={`flex items-center gap-4 px-4 py-3.5 rounded-lg transition-all duration-200 cursor-pointer ${isActive
-                                                ? "bg-[hsl(var(--google-blue-500))] text-white font-semibold shadow-lg"
-                                                : "text-black font-medium hover:bg-[hsl(var(--google-gray-100))] hover:font-semibold"
-                                                }`}
-                                            onClick={() => setIsMobileMenuOpen(false)}
-                                        >
-                                            <Icon className={`h-6 w-6 ${isActive ? "text-white" : "text-black"}`} strokeWidth={isActive ? 2.5 : 2} />
-                                            <span className={`text-base font-normal ${isActive ? "text-white" : "text-black"}`}>
-                                                {item.label}
-                                            </span>
-                                        </div>
-                                    </Link>
+                                    <div
+                                        key={item.path}
+                                        draggable
+                                        onDragStart={() => setDraggedIndex(index)}
+                                        onDragEnd={() => {
+                                            setDraggedIndex(null);
+                                            setDragOverIndex(null);
+                                        }}
+                                        onDragOver={(e) => {
+                                            e.preventDefault();
+                                            if (draggedIndex !== null && draggedIndex !== index) {
+                                                setDragOverIndex(index);
+                                            }
+                                        }}
+                                        onDragLeave={() => {
+                                            if (dragOverIndex === index) {
+                                                setDragOverIndex(null);
+                                            }
+                                        }}
+                                        onDrop={(e) => {
+                                            e.preventDefault();
+                                            if (draggedIndex !== null && draggedIndex !== index) {
+                                                const currentOrder = menuOrder || menuItems.map((m: any) => m.path);
+                                                const newOrder = [...currentOrder];
+                                                [newOrder[draggedIndex], newOrder[index]] = [newOrder[index], newOrder[draggedIndex]];
+                                                localStorage.setItem("menuOrder", JSON.stringify(newOrder));
+                                                setMenuOrder(newOrder); // 状態を更新して再レンダリング
+                                            }
+                                            setDraggedIndex(null);
+                                            setDragOverIndex(null);
+                                        }}
+                                        className={`${isDragging ? "opacity-50" : ""} ${isDragOver ? "border-2 border-blue-500 rounded-lg" : ""}`}
+                                    >
+                                        <Link href={item.path}>
+                                            <div
+                                                className={`flex items-center gap-4 px-4 py-3.5 rounded-lg transition-all duration-200 cursor-pointer ${isActive
+                                                    ? "bg-[hsl(var(--google-blue-500))] text-white font-semibold shadow-lg"
+                                                    : "text-black font-medium hover:bg-[hsl(var(--google-gray-100))] hover:font-semibold"
+                                                    }`}
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                            >
+                                                <GripVertical className={`h-5 w-5 ${isActive ? "text-white opacity-70" : "text-gray-400"} cursor-move`} />
+                                                <Icon className={`h-6 w-6 ${isActive ? "text-white" : "text-black"}`} strokeWidth={isActive ? 2.5 : 2} />
+                                                <span className={`text-base font-normal flex-1 ${isActive ? "text-white" : "text-black"}`}>
+                                                    {item.label}
+                                                </span>
+                                            </div>
+                                        </Link>
+                                    </div>
                                 );
                             })}
 
