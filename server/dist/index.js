@@ -10582,22 +10582,30 @@ async function startServer() {
         const fs6 = await import("fs");
         const path7 = await import("path");
         const migrationsDir = path7.join(process.cwd(), "drizzle");
-        const migrationFiles = fs6.readdirSync(migrationsDir).filter((f) => f.endsWith(".sql")).sort().reverse();
+        const migrationFiles = fs6.readdirSync(migrationsDir).filter((f) => f.endsWith(".sql") && !f.startsWith("schema")).sort();
         if (migrationFiles.length > 0) {
-          const latestMigration = migrationFiles[0];
-          const migrationPath = path7.join(migrationsDir, latestMigration);
-          const migrationSQL = fs6.readFileSync(migrationPath, "utf-8");
-          const statements = migrationSQL.split(";").map((s) => s.trim()).filter((s) => s.length > 0 && !s.startsWith("--"));
-          for (const statement of statements) {
-            try {
-              await pool.execute(statement);
-            } catch (error) {
-              if (!error.message?.includes("already exists") && !error.message?.includes("Duplicate")) {
-                console.warn(`[Server] \u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u5B9F\u884C\u4E2D\u306B\u8B66\u544A: ${error.message}`);
+          console.log(`[Server] ${migrationFiles.length}\u4EF6\u306E\u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u30D5\u30A1\u30A4\u30EB\u3092\u5B9F\u884C\u3057\u307E\u3059...`);
+          for (const migrationFile of migrationFiles) {
+            const migrationPath = path7.join(migrationsDir, migrationFile);
+            const migrationSQL = fs6.readFileSync(migrationPath, "utf-8");
+            const statements = migrationSQL.split("--> statement-breakpoint").map((s) => s.trim()).filter((s) => s.length > 0 && !s.startsWith("--") && s.includes("CREATE"));
+            let successCount = 0;
+            for (const statement of statements) {
+              try {
+                if (statement.trim()) {
+                  await pool.execute(statement);
+                  successCount++;
+                }
+              } catch (error) {
+                if (error.message?.includes("already exists") || error.message?.includes("Duplicate") || error.message?.includes("Table") && error.message?.includes("already exists")) {
+                } else {
+                  console.warn(`[Server] \u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u5B9F\u884C\u4E2D\u306B\u8B66\u544A (${migrationFile}): ${error.message}`);
+                }
               }
             }
+            console.log(`[Server] \u2705 \u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u5B9F\u884C\u5B8C\u4E86: ${migrationFile} (${successCount}\u30B9\u30C6\u30FC\u30C8\u30E1\u30F3\u30C8)`);
           }
-          console.log(`[Server] \u2705 \u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u5B9F\u884C\u5B8C\u4E86: ${latestMigration}`);
+          console.log(`[Server] \u2705 \u3059\u3079\u3066\u306E\u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u5B9F\u884C\u5B8C\u4E86`);
         } else {
           console.warn("[Server] \u26A0\uFE0F \u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u30D5\u30A1\u30A4\u30EB\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093");
         }

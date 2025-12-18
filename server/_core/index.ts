@@ -69,35 +69,47 @@ async function startServer() {
         const path = await import("path");
         const migrationsDir = path.join(process.cwd(), "drizzle");
         
-        // 最新のマイグレーションファイルを実行
+        // すべてのマイグレーションファイルを順番に実行
         const migrationFiles = fs.readdirSync(migrationsDir)
-          .filter(f => f.endsWith(".sql"))
-          .sort()
-          .reverse();
+          .filter(f => f.endsWith(".sql") && !f.startsWith("schema"))
+          .sort(); // ファイル名でソート（0000, 0001, 0003の順）
         
         if (migrationFiles.length > 0) {
-          const latestMigration = migrationFiles[0];
-          const migrationPath = path.join(migrationsDir, latestMigration);
-          const migrationSQL = fs.readFileSync(migrationPath, "utf-8");
+          console.log(`[Server] ${migrationFiles.length}件のマイグレーションファイルを実行します...`);
           
-          // SQLを実行（複数のステートメントに分割）
-          const statements = migrationSQL
-            .split(";")
-            .map(s => s.trim())
-            .filter(s => s.length > 0 && !s.startsWith("--"));
-          
-          for (const statement of statements) {
-            try {
-              await pool.execute(statement);
-            } catch (error: any) {
-              // テーブルが既に存在するなどのエラーは無視
-              if (!error.message?.includes("already exists") && !error.message?.includes("Duplicate")) {
-                console.warn(`[Server] マイグレーション実行中に警告: ${error.message}`);
+          for (const migrationFile of migrationFiles) {
+            const migrationPath = path.join(migrationsDir, migrationFile);
+            const migrationSQL = fs.readFileSync(migrationPath, "utf-8");
+            
+            // SQLを実行（複数のステートメントに分割）
+            const statements = migrationSQL
+              .split("--> statement-breakpoint")
+              .map(s => s.trim())
+              .filter(s => s.length > 0 && !s.startsWith("--") && s.includes("CREATE"));
+            
+            let successCount = 0;
+            for (const statement of statements) {
+              try {
+                if (statement.trim()) {
+                  await pool.execute(statement);
+                  successCount++;
+                }
+              } catch (error: any) {
+                // テーブルが既に存在するなどのエラーは無視
+                if (error.message?.includes("already exists") || 
+                    error.message?.includes("Duplicate") ||
+                    (error.message?.includes("Table") && error.message?.includes("already exists"))) {
+                  // 既に存在する場合はスキップ
+                } else {
+                  console.warn(`[Server] マイグレーション実行中に警告 (${migrationFile}): ${error.message}`);
+                }
               }
             }
+            
+            console.log(`[Server] ✅ マイグレーション実行完了: ${migrationFile} (${successCount}ステートメント)`);
           }
           
-          console.log(`[Server] ✅ マイグレーション実行完了: ${latestMigration}`);
+          console.log(`[Server] ✅ すべてのマイグレーション実行完了`);
         } else {
           console.warn("[Server] ⚠️ マイグレーションファイルが見つかりません");
         }
