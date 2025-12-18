@@ -10568,6 +10568,49 @@ async function findAvailablePort(startPort = 8700) {
 }
 async function startServer() {
   try {
+    console.log("[Server] \u30C7\u30FC\u30BF\u30D9\u30FC\u30B9\u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u3092\u5B9F\u884C\u4E2D...");
+    const { drizzle: drizzle2 } = await import("drizzle-orm/mysql2");
+    const { getPool: getPool2 } = await Promise.resolve().then(() => (init_db(), db_exports));
+    const { schema } = await Promise.resolve().then(() => (init_db(), db_exports));
+    const pool = getPool2();
+    if (pool) {
+      const { push } = await import("drizzle-kit");
+      const db = drizzle2(pool, { schema, mode: "default" });
+      try {
+        await pool.execute("SELECT 1");
+        console.log("[Server] \u2705 \u30C7\u30FC\u30BF\u30D9\u30FC\u30B9\u63A5\u7D9A\u78BA\u8A8D\u6210\u529F");
+        const fs6 = await import("fs");
+        const path7 = await import("path");
+        const migrationsDir = path7.join(process.cwd(), "drizzle");
+        const migrationFiles = fs6.readdirSync(migrationsDir).filter((f) => f.endsWith(".sql")).sort().reverse();
+        if (migrationFiles.length > 0) {
+          const latestMigration = migrationFiles[0];
+          const migrationPath = path7.join(migrationsDir, latestMigration);
+          const migrationSQL = fs6.readFileSync(migrationPath, "utf-8");
+          const statements = migrationSQL.split(";").map((s) => s.trim()).filter((s) => s.length > 0 && !s.startsWith("--"));
+          for (const statement of statements) {
+            try {
+              await pool.execute(statement);
+            } catch (error) {
+              if (!error.message?.includes("already exists") && !error.message?.includes("Duplicate")) {
+                console.warn(`[Server] \u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u5B9F\u884C\u4E2D\u306B\u8B66\u544A: ${error.message}`);
+              }
+            }
+          }
+          console.log(`[Server] \u2705 \u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u5B9F\u884C\u5B8C\u4E86: ${latestMigration}`);
+        } else {
+          console.warn("[Server] \u26A0\uFE0F \u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u30D5\u30A1\u30A4\u30EB\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093");
+        }
+      } catch (error) {
+        console.warn("[Server] \u26A0\uFE0F \u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u5B9F\u884C\u3092\u30B9\u30AD\u30C3\u30D7\uFF08\u30C7\u30FC\u30BF\u30D9\u30FC\u30B9\u63A5\u7D9A\u30A8\u30E9\u30FC\uFF09:", error);
+      }
+    } else {
+      console.warn("[Server] \u26A0\uFE0F \u30C7\u30FC\u30BF\u30D9\u30FC\u30B9\u30D7\u30FC\u30EB\u304C\u5229\u7528\u3067\u304D\u307E\u305B\u3093\u3002\u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u3092\u30B9\u30AD\u30C3\u30D7\u3057\u307E\u3059\u3002");
+    }
+  } catch (error) {
+    console.warn("[Server] \u26A0\uFE0F \u30DE\u30A4\u30B0\u30EC\u30FC\u30B7\u30E7\u30F3\u5B9F\u884C\u306B\u5931\u6557\u3057\u307E\u3057\u305F\uFF08\u7D9A\u884C\u3057\u307E\u3059\uFF09:", error);
+  }
+  try {
     await initializeDefaultBreakTimes();
   } catch (error) {
     console.warn("[Server] Failed to initialize break times, continuing anyway:", error);

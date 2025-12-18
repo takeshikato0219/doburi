@@ -44,6 +44,73 @@ async function findAvailablePort(startPort: number = 8700): Promise<number> {
 }
 
 async function startServer() {
+  // データベースマイグレーションを実行（テーブル作成）
+  try {
+    console.log("[Server] データベースマイグレーションを実行中...");
+    const { drizzle } = await import("drizzle-orm/mysql2");
+    const { getPool } = await import("../db");
+    const { schema } = await import("../db");
+    const pool = getPool();
+    
+    if (pool) {
+      // Drizzleのpushコマンドを実行（スキーマからテーブルを作成）
+      const { push } = await import("drizzle-kit");
+      const db = drizzle(pool, { schema, mode: "default" });
+      
+      // テーブルが存在するか確認してからpushを実行
+      try {
+        await pool.execute("SELECT 1");
+        console.log("[Server] ✅ データベース接続確認成功");
+        
+        // スキーマをプッシュしてテーブルを作成
+        // 注意: drizzle-kitのpushはCLIコマンドなので、代わりに手動でSQLを実行
+        // または、マイグレーションファイルを読み込んで実行
+        const fs = await import("fs");
+        const path = await import("path");
+        const migrationsDir = path.join(process.cwd(), "drizzle");
+        
+        // 最新のマイグレーションファイルを実行
+        const migrationFiles = fs.readdirSync(migrationsDir)
+          .filter(f => f.endsWith(".sql"))
+          .sort()
+          .reverse();
+        
+        if (migrationFiles.length > 0) {
+          const latestMigration = migrationFiles[0];
+          const migrationPath = path.join(migrationsDir, latestMigration);
+          const migrationSQL = fs.readFileSync(migrationPath, "utf-8");
+          
+          // SQLを実行（複数のステートメントに分割）
+          const statements = migrationSQL
+            .split(";")
+            .map(s => s.trim())
+            .filter(s => s.length > 0 && !s.startsWith("--"));
+          
+          for (const statement of statements) {
+            try {
+              await pool.execute(statement);
+            } catch (error: any) {
+              // テーブルが既に存在するなどのエラーは無視
+              if (!error.message?.includes("already exists") && !error.message?.includes("Duplicate")) {
+                console.warn(`[Server] マイグレーション実行中に警告: ${error.message}`);
+              }
+            }
+          }
+          
+          console.log(`[Server] ✅ マイグレーション実行完了: ${latestMigration}`);
+        } else {
+          console.warn("[Server] ⚠️ マイグレーションファイルが見つかりません");
+        }
+      } catch (error) {
+        console.warn("[Server] ⚠️ マイグレーション実行をスキップ（データベース接続エラー）:", error);
+      }
+    } else {
+      console.warn("[Server] ⚠️ データベースプールが利用できません。マイグレーションをスキップします。");
+    }
+  } catch (error) {
+    console.warn("[Server] ⚠️ マイグレーション実行に失敗しました（続行します）:", error);
+  }
+
   // デフォルトの休憩時間を初期化
   try {
     await initializeDefaultBreakTimes();

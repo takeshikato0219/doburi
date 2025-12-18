@@ -673,7 +673,7 @@ async function initializeSampleData(db: any) {
                                     .from(schema.workRecords)
                                     .limit(10);
                                 console.log(`[Init] ✅ 確認: データベースに作業記録が存在します (最初の10件を確認)`);
-                            } else {
+            } else {
                                 console.warn("[Init] ⚠️ No work records to insert");
                             }
                         }
