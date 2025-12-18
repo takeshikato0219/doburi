@@ -203,6 +203,17 @@ async function initializeSampleData(db: any) {
     
     if (!db) {
         console.error("[Init] ❌ Database connection failed, cannot initialize sample data");
+        console.error("[Init] データベース接続を確認してください");
+        return;
+    }
+    
+    // データベース接続テスト
+    try {
+        await db.select().from(schema.users).limit(1);
+        console.log("[Init] ✅ データベース接続テスト成功");
+    } catch (error) {
+        console.error("[Init] ❌ データベース接続テスト失敗:", error);
+        console.error("[Init] サンプルデータの作成をスキップします");
         return;
     }
     
@@ -379,8 +390,8 @@ async function initializeSampleData(db: any) {
                 console.log(`[Init] Deleted ${existingSampleVehicles.length} existing sample vehicles and their related records`);
             }
 
-            // 車種マスタを確認
-                const vehicleTypes = await db
+            // 車種マスタを確認（存在しない場合は作成）
+            let vehicleTypes = await db
                     .select({ id: schema.vehicleTypes.id })
                     .from(schema.vehicleTypes)
                     .limit(1);
@@ -388,10 +399,26 @@ async function initializeSampleData(db: any) {
             console.log(`[Init] Found ${vehicleTypes.length} vehicle types`);
             
                 if (vehicleTypes.length === 0) {
-                console.error("[Init] ERROR: No vehicleTypes found! Cannot create sample vehicles.");
-                console.error("[Init] Please ensure vehicle types are initialized before sample data.");
-                } else {
+                console.log("[Init] ⚠️ 車種マスタが存在しません。デフォルトの車種を作成します...");
+                try {
+                    await db.insert(schema.vehicleTypes).values({
+                        name: "ゼネコン向け建物",
+                        description: "オフィスビル・マンション・工場など",
+                    });
+                    vehicleTypes = await db
+                        .select({ id: schema.vehicleTypes.id })
+                        .from(schema.vehicleTypes)
+                        .limit(1);
+                    console.log(`[Init] ✅ デフォルトの車種を作成しました (ID: ${vehicleTypes[0]?.id})`);
+                } catch (error) {
+                    console.error("[Init] ❌ 車種マスタの作成に失敗しました:", error);
+                    throw error; // 車種がないとサンプルデータを作成できないため、エラーを再スロー
+                }
+            }
+            
+            if (vehicleTypes.length > 0) {
                     const vehicleTypeId = vehicleTypes[0].id;
+                console.log(`[Init] ✅ 車種ID ${vehicleTypeId} を使用してサンプル車両を作成します`);
                     // ゼネコン向け建設現場のサンプルデータ（20件の建物）
                     const buildingProjects = [
                         { type: "オフィスビル", number: "001", customer: "東京中央オフィスビル", minutes: 4800, desiredDeliveryDate: new Date("2025-03-15"), checkDueDate: new Date("2025-03-10"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
@@ -433,8 +460,26 @@ async function initializeSampleData(db: any) {
                             outsourcingDestination: building.outsourcingDestination,
                         });
                     }
+                    if (sampleVehicles.length > 0) {
                     await db.insert(schema.vehicles).values(sampleVehicles);
-                    console.log("[Init] ✅ Created 20 sample vehicles (オフィスビル/マンション/工場 計20件)");
+                        console.log(`[Init] ✅ Created ${sampleVehicles.length} sample vehicles (オフィスビル/マンション/工場 計20件)`);
+                        
+                        // 挿入した車両を確認
+                        const { or } = await import("drizzle-orm");
+                        const insertedVehicles = await db
+                            .select({ id: schema.vehicles.id, vehicleNumber: schema.vehicles.vehicleNumber })
+                            .from(schema.vehicles)
+                            .where(
+                                or(
+                                    like(schema.vehicles.vehicleNumber, "オフィスビル-%"),
+                                    like(schema.vehicles.vehicleNumber, "マンション-%"),
+                                    like(schema.vehicles.vehicleNumber, "工場-%")
+                                )
+                            );
+                        console.log(`[Init] ✅ 確認: ${insertedVehicles.length}件のサンプル車両がデータベースに存在します`);
+                    } else {
+                        console.error("[Init] ❌ サンプル車両データが空です");
+                    }
                     
                     // 3. 作業記録のサンプルデータを追加
                     try {
@@ -914,7 +959,7 @@ async function initializeSampleData(db: any) {
                     console.log(`[Init] ✅ Created ${attendanceRecords.length} sample attendance records (1 month, 20 staff)`);
                 }
             }
-        } catch (error) {
+    } catch (error) {
             console.warn("[Init] Failed to initialize sample attendance records:", error);
         }
 

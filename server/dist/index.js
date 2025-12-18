@@ -9524,6 +9524,15 @@ async function initializeSampleData(db) {
   console.log("[Init] Database connection:", db ? "OK" : "FAILED");
   if (!db) {
     console.error("[Init] \u274C Database connection failed, cannot initialize sample data");
+    console.error("[Init] \u30C7\u30FC\u30BF\u30D9\u30FC\u30B9\u63A5\u7D9A\u3092\u78BA\u8A8D\u3057\u3066\u304F\u3060\u3055\u3044");
+    return;
+  }
+  try {
+    await db.select().from(schema_exports.users).limit(1);
+    console.log("[Init] \u2705 \u30C7\u30FC\u30BF\u30D9\u30FC\u30B9\u63A5\u7D9A\u30C6\u30B9\u30C8\u6210\u529F");
+  } catch (error) {
+    console.error("[Init] \u274C \u30C7\u30FC\u30BF\u30D9\u30FC\u30B9\u63A5\u7D9A\u30C6\u30B9\u30C8\u5931\u6557:", error);
+    console.error("[Init] \u30B5\u30F3\u30D7\u30EB\u30C7\u30FC\u30BF\u306E\u4F5C\u6210\u3092\u30B9\u30AD\u30C3\u30D7\u3057\u307E\u3059");
     return;
   }
   try {
@@ -9629,13 +9638,25 @@ async function initializeSampleData(db) {
         await db.delete(schema_exports.vehicles).where(inArray4(schema_exports.vehicles.id, vehicleIds));
         console.log(`[Init] Deleted ${existingSampleVehicles.length} existing sample vehicles and their related records`);
       }
-      const vehicleTypes2 = await db.select({ id: schema_exports.vehicleTypes.id }).from(schema_exports.vehicleTypes).limit(1);
+      let vehicleTypes2 = await db.select({ id: schema_exports.vehicleTypes.id }).from(schema_exports.vehicleTypes).limit(1);
       console.log(`[Init] Found ${vehicleTypes2.length} vehicle types`);
       if (vehicleTypes2.length === 0) {
-        console.error("[Init] ERROR: No vehicleTypes found! Cannot create sample vehicles.");
-        console.error("[Init] Please ensure vehicle types are initialized before sample data.");
-      } else {
+        console.log("[Init] \u26A0\uFE0F \u8ECA\u7A2E\u30DE\u30B9\u30BF\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002\u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u8ECA\u7A2E\u3092\u4F5C\u6210\u3057\u307E\u3059...");
+        try {
+          await db.insert(schema_exports.vehicleTypes).values({
+            name: "\u30BC\u30CD\u30B3\u30F3\u5411\u3051\u5EFA\u7269",
+            description: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB\u30FB\u30DE\u30F3\u30B7\u30E7\u30F3\u30FB\u5DE5\u5834\u306A\u3069"
+          });
+          vehicleTypes2 = await db.select({ id: schema_exports.vehicleTypes.id }).from(schema_exports.vehicleTypes).limit(1);
+          console.log(`[Init] \u2705 \u30C7\u30D5\u30A9\u30EB\u30C8\u306E\u8ECA\u7A2E\u3092\u4F5C\u6210\u3057\u307E\u3057\u305F (ID: ${vehicleTypes2[0]?.id})`);
+        } catch (error) {
+          console.error("[Init] \u274C \u8ECA\u7A2E\u30DE\u30B9\u30BF\u306E\u4F5C\u6210\u306B\u5931\u6557\u3057\u307E\u3057\u305F:", error);
+          throw error;
+        }
+      }
+      if (vehicleTypes2.length > 0) {
         const vehicleTypeId = vehicleTypes2[0].id;
+        console.log(`[Init] \u2705 \u8ECA\u7A2EID ${vehicleTypeId} \u3092\u4F7F\u7528\u3057\u3066\u30B5\u30F3\u30D7\u30EB\u8ECA\u4E21\u3092\u4F5C\u6210\u3057\u307E\u3059`);
         const buildingProjects = [
           { type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB", number: "001", customer: "\u6771\u4EAC\u4E2D\u592E\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB", minutes: 4800, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-03-15"), checkDueDate: /* @__PURE__ */ new Date("2025-03-10"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
           { type: "\u30DE\u30F3\u30B7\u30E7\u30F3", number: "002", customer: "\u30B5\u30F3\u30E9\u30A4\u30BA\u30DE\u30F3\u30B7\u30E7\u30F3", minutes: 7200, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-04-20"), checkDueDate: /* @__PURE__ */ new Date("2025-04-15"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
@@ -9677,8 +9698,21 @@ async function initializeSampleData(db) {
             outsourcingDestination: building.outsourcingDestination
           });
         }
-        await db.insert(schema_exports.vehicles).values(sampleVehicles);
-        console.log("[Init] \u2705 Created 20 sample vehicles (\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB/\u30DE\u30F3\u30B7\u30E7\u30F3/\u5DE5\u5834 \u8A0820\u4EF6)");
+        if (sampleVehicles.length > 0) {
+          await db.insert(schema_exports.vehicles).values(sampleVehicles);
+          console.log(`[Init] \u2705 Created ${sampleVehicles.length} sample vehicles (\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB/\u30DE\u30F3\u30B7\u30E7\u30F3/\u5DE5\u5834 \u8A0820\u4EF6)`);
+          const { or: or3 } = await import("drizzle-orm");
+          const insertedVehicles = await db.select({ id: schema_exports.vehicles.id, vehicleNumber: schema_exports.vehicles.vehicleNumber }).from(schema_exports.vehicles).where(
+            or3(
+              like(schema_exports.vehicles.vehicleNumber, "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB-%"),
+              like(schema_exports.vehicles.vehicleNumber, "\u30DE\u30F3\u30B7\u30E7\u30F3-%"),
+              like(schema_exports.vehicles.vehicleNumber, "\u5DE5\u5834-%")
+            )
+          );
+          console.log(`[Init] \u2705 \u78BA\u8A8D: ${insertedVehicles.length}\u4EF6\u306E\u30B5\u30F3\u30D7\u30EB\u8ECA\u4E21\u304C\u30C7\u30FC\u30BF\u30D9\u30FC\u30B9\u306B\u5B58\u5728\u3057\u307E\u3059`);
+        } else {
+          console.error("[Init] \u274C \u30B5\u30F3\u30D7\u30EB\u8ECA\u4E21\u30C7\u30FC\u30BF\u304C\u7A7A\u3067\u3059");
+        }
         try {
           const { or: or3 } = await import("drizzle-orm");
           const vehicles2 = await db.select({ id: schema_exports.vehicles.id, vehicleNumber: schema_exports.vehicles.vehicleNumber, customerName: schema_exports.vehicles.customerName }).from(schema_exports.vehicles).where(
