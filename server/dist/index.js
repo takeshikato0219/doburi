@@ -3563,7 +3563,18 @@ var processesRouter = createTRPCRouter({
   list: protectedProcedure.query(async () => {
     const db = await getDb();
     if (!db) {
-      return [];
+      console.warn("[processes.list] Database connection failed, returning sample data");
+      const { SAMPLE_PROCESSES: SAMPLE_PROCESSES2 } = await Promise.resolve().then(() => (init_sampleData(), sampleData_exports));
+      return SAMPLE_PROCESSES2.map((p, idx) => ({
+        id: p.id,
+        name: p.name,
+        description: `${p.name}\u306E\u8AAC\u660E`,
+        majorCategory: p.majorCategory,
+        minorCategory: p.majorCategory,
+        displayOrder: idx + 1,
+        createdAt: /* @__PURE__ */ new Date(),
+        updatedAt: /* @__PURE__ */ new Date()
+      }));
     }
     const processes2 = await db.select().from(schema_exports.processes).orderBy(schema_exports.processes.displayOrder);
     return processes2;
