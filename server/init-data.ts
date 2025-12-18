@@ -398,7 +398,7 @@ async function initializeSampleData(db: any) {
             
             console.log(`[Init] Found ${vehicleTypes.length} vehicle types`);
             
-                if (vehicleTypes.length === 0) {
+            if (vehicleTypes.length === 0) {
                 console.log("[Init] ⚠️ 車種マスタが存在しません。デフォルトの車種を作成します...");
                 try {
                     await db.insert(schema.vehicleTypes).values({
@@ -417,7 +417,7 @@ async function initializeSampleData(db: any) {
             }
             
             if (vehicleTypes.length > 0) {
-                    const vehicleTypeId = vehicleTypes[0].id;
+                const vehicleTypeId = vehicleTypes[0].id;
                 console.log(`[Init] ✅ 車種ID ${vehicleTypeId} を使用してサンプル車両を作成します`);
                     // ゼネコン向け建設現場のサンプルデータ（20件の建物）
                     const buildingProjects = [
