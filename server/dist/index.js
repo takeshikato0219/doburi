@@ -9529,8 +9529,14 @@ async function initializeSampleData(db) {
   try {
     console.log("[Init] \u65E2\u5B58\u306E\u30B5\u30F3\u30D7\u30EB\u30C7\u30FC\u30BF\u3092\u524A\u9664\u4E2D...");
     try {
-      const { inArray: inArray4 } = await import("drizzle-orm");
-      const existingSampleVehicles = await db.select({ id: schema_exports.vehicles.id }).from(schema_exports.vehicles).where(like(schema_exports.vehicles.vehicleNumber, "\u5BB6-%"));
+      const { inArray: inArray4, or: or2 } = await import("drizzle-orm");
+      const existingSampleVehicles = await db.select({ id: schema_exports.vehicles.id }).from(schema_exports.vehicles).where(
+        or2(
+          like(schema_exports.vehicles.vehicleNumber, "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB-%"),
+          like(schema_exports.vehicles.vehicleNumber, "\u30DE\u30F3\u30B7\u30E7\u30F3-%"),
+          like(schema_exports.vehicles.vehicleNumber, "\u5DE5\u5834-%")
+        )
+      );
       if (existingSampleVehicles.length > 0) {
         const vehicleIds = existingSampleVehicles.map((v) => v.id);
         console.log(`[Init] \u65E2\u5B58\u306E\u30B5\u30F3\u30D7\u30EB\u8ECA\u4E21 ${existingSampleVehicles.length}\u4EF6\u3092\u524A\u9664\u4E2D...`);
@@ -9606,7 +9612,14 @@ async function initializeSampleData(db) {
     }
     try {
       console.log("[Init] Starting sample vehicle initialization...");
-      const existingSampleVehicles = await db.select({ id: schema_exports.vehicles.id }).from(schema_exports.vehicles).where(like(schema_exports.vehicles.vehicleNumber, "\u5BB6-%"));
+      const { or: or2 } = await import("drizzle-orm");
+      const existingSampleVehicles = await db.select({ id: schema_exports.vehicles.id }).from(schema_exports.vehicles).where(
+        or2(
+          like(schema_exports.vehicles.vehicleNumber, "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB-%"),
+          like(schema_exports.vehicles.vehicleNumber, "\u30DE\u30F3\u30B7\u30E7\u30F3-%"),
+          like(schema_exports.vehicles.vehicleNumber, "\u5DE5\u5834-%")
+        )
+      );
       console.log(`[Init] Found ${existingSampleVehicles.length} existing sample vehicles`);
       if (existingSampleVehicles.length > 0) {
         const vehicleIds = existingSampleVehicles.map((v) => v.id);
@@ -9623,51 +9636,58 @@ async function initializeSampleData(db) {
         console.error("[Init] Please ensure vehicle types are initialized before sample data.");
       } else {
         const vehicleTypeId = vehicleTypes2[0].id;
-        const houseNames = [
-          { number: "001", customer: "\u7530\u4E2D\u592A\u90CE\u3055\u3093\u306E\u5BB6", minutes: 480, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-15"), checkDueDate: /* @__PURE__ */ new Date("2024-12-10"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
-          { number: "002", customer: "\u4F50\u85E4\u82B1\u5B50\u3055\u3093\u306E\u5BB6", minutes: 720, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-20"), checkDueDate: /* @__PURE__ */ new Date("2024-12-15"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
-          { number: "003", customer: "\u9234\u6728\u4E00\u90CE\u3055\u3093\u306E\u5BB6", minutes: 360, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-18"), checkDueDate: /* @__PURE__ */ new Date("2024-12-12"), hasCoating: "yes", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null },
-          { number: "004", customer: "\u5C71\u7530\u6B21\u90CE\u3055\u3093\u306E\u5BB6", minutes: 600, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-25"), checkDueDate: /* @__PURE__ */ new Date("2024-12-20"), hasCoating: "no", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148C" },
-          { number: "005", customer: "\u4E2D\u6751\u4E09\u90CE\u3055\u3093\u306E\u5BB6", minutes: 240, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-12"), checkDueDate: /* @__PURE__ */ new Date("2024-12-08"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: null },
-          { number: "006", customer: "\u4F0A\u85E4\u56DB\u90CE\u3055\u3093\u306E\u5BB6", minutes: 540, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-22"), checkDueDate: /* @__PURE__ */ new Date("2024-12-17"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
-          { number: "007", customer: "\u9AD8\u6A4B\u4E94\u90CE\u3055\u3093\u306E\u5BB6", minutes: 420, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-16"), checkDueDate: /* @__PURE__ */ new Date("2024-12-11"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
-          { number: "008", customer: "\u6E21\u8FBA\u516D\u90CE\u3055\u3093\u306E\u5BB6", minutes: 680, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-28"), checkDueDate: /* @__PURE__ */ new Date("2024-12-23"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null },
-          { number: "009", customer: "\u658E\u85E4\u4E03\u90CE\u3055\u3093\u306E\u5BB6", minutes: 380, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-14"), checkDueDate: /* @__PURE__ */ new Date("2024-12-09"), hasCoating: "yes", hasLine: "yes", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148C" },
-          { number: "010", customer: "\u5C0F\u6797\u516B\u90CE\u3055\u3093\u306E\u5BB6", minutes: 520, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-19"), checkDueDate: /* @__PURE__ */ new Date("2024-12-14"), hasCoating: "no", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
-          { number: "011", customer: "\u52A0\u85E4\u4E5D\u90CE\u3055\u3093\u306E\u5BB6", minutes: 460, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-17"), checkDueDate: /* @__PURE__ */ new Date("2024-12-12"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
-          { number: "012", customer: "\u5409\u7530\u5341\u90CE\u3055\u3093\u306E\u5BB6", minutes: 640, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-26"), checkDueDate: /* @__PURE__ */ new Date("2024-12-21"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null },
-          { number: "013", customer: "\u5C71\u672C\u5341\u4E00\u3055\u3093\u306E\u5BB6", minutes: 340, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-13"), checkDueDate: /* @__PURE__ */ new Date("2024-12-08"), hasCoating: "yes", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148C" },
-          { number: "014", customer: "\u677E\u672C\u5341\u4E8C\u3055\u3093\u306E\u5BB6", minutes: 580, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-24"), checkDueDate: /* @__PURE__ */ new Date("2024-12-19"), hasCoating: "no", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
-          { number: "015", customer: "\u4E95\u4E0A\u5341\u4E09\u3055\u3093\u306E\u5BB6", minutes: 400, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-15"), checkDueDate: /* @__PURE__ */ new Date("2024-12-10"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
-          { number: "016", customer: "\u6728\u6751\u5341\u56DB\u3055\u3093\u306E\u5BB6", minutes: 700, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-29"), checkDueDate: /* @__PURE__ */ new Date("2024-12-24"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null },
-          { number: "017", customer: "\u6797\u5341\u4E94\u3055\u3093\u306E\u5BB6", minutes: 320, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-11"), checkDueDate: /* @__PURE__ */ new Date("2024-12-06"), hasCoating: "yes", hasLine: "yes", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148C" },
-          { number: "018", customer: "\u6589\u85E4\u5341\u516D\u3055\u3093\u306E\u5BB6", minutes: 560, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-21"), checkDueDate: /* @__PURE__ */ new Date("2024-12-16"), hasCoating: "no", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
-          { number: "019", customer: "\u7530\u6751\u5341\u4E03\u3055\u3093\u306E\u5BB6", minutes: 440, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-16"), checkDueDate: /* @__PURE__ */ new Date("2024-12-11"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
-          { number: "020", customer: "\u4E2D\u5CF6\u5341\u516B\u3055\u3093\u306E\u5BB6", minutes: 620, desiredDeliveryDate: /* @__PURE__ */ new Date("2024-12-27"), checkDueDate: /* @__PURE__ */ new Date("2024-12-22"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null }
+        const buildingProjects = [
+          { type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB", number: "001", customer: "\u6771\u4EAC\u4E2D\u592E\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB", minutes: 4800, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-03-15"), checkDueDate: /* @__PURE__ */ new Date("2025-03-10"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
+          { type: "\u30DE\u30F3\u30B7\u30E7\u30F3", number: "002", customer: "\u30B5\u30F3\u30E9\u30A4\u30BA\u30DE\u30F3\u30B7\u30E7\u30F3", minutes: 7200, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-04-20"), checkDueDate: /* @__PURE__ */ new Date("2025-04-15"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
+          { type: "\u5DE5\u5834", number: "003", customer: "\u95A2\u6771\u88FD\u9020\u5DE5\u5834", minutes: 3600, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-02-18"), checkDueDate: /* @__PURE__ */ new Date("2025-02-12"), hasCoating: "yes", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null },
+          { type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB", number: "004", customer: "\u65B0\u5BBF\u30D3\u30B8\u30CD\u30B9\u30BF\u30EF\u30FC", minutes: 6e3, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-05-25"), checkDueDate: /* @__PURE__ */ new Date("2025-05-20"), hasCoating: "no", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148C" },
+          { type: "\u30DE\u30F3\u30B7\u30E7\u30F3", number: "005", customer: "\u30D1\u30FC\u30AF\u30B5\u30A4\u30C9\u30DE\u30F3\u30B7\u30E7\u30F3", minutes: 2400, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-01-12"), checkDueDate: /* @__PURE__ */ new Date("2025-01-08"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: null },
+          { type: "\u5DE5\u5834", number: "006", customer: "\u6A2A\u6D5C\u7269\u6D41\u30BB\u30F3\u30BF\u30FC", minutes: 5400, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-04-22"), checkDueDate: /* @__PURE__ */ new Date("2025-04-17"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
+          { type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB", number: "007", customer: "\u54C1\u5DDD\u30B0\u30E9\u30F3\u30C9\u30BF\u30EF\u30FC", minutes: 4200, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-03-16"), checkDueDate: /* @__PURE__ */ new Date("2025-03-11"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
+          { type: "\u30DE\u30F3\u30B7\u30E7\u30F3", number: "008", customer: "\u30EA\u30D0\u30FC\u30B5\u30A4\u30C9\u30DE\u30F3\u30B7\u30E7\u30F3", minutes: 6800, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-05-28"), checkDueDate: /* @__PURE__ */ new Date("2025-05-23"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null },
+          { type: "\u5DE5\u5834", number: "009", customer: "\u5343\u8449\u98DF\u54C1\u5DE5\u5834", minutes: 3800, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-02-14"), checkDueDate: /* @__PURE__ */ new Date("2025-02-09"), hasCoating: "yes", hasLine: "yes", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148C" },
+          { type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB", number: "010", customer: "\u6E0B\u8C37\u30B9\u30AF\u30A8\u30A2\u30D3\u30EB", minutes: 5200, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-04-19"), checkDueDate: /* @__PURE__ */ new Date("2025-04-14"), hasCoating: "no", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
+          { type: "\u30DE\u30F3\u30B7\u30E7\u30F3", number: "011", customer: "\u30B7\u30C6\u30A3\u30D1\u30FC\u30AF\u30DE\u30F3\u30B7\u30E7\u30F3", minutes: 4600, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-03-17"), checkDueDate: /* @__PURE__ */ new Date("2025-03-12"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
+          { type: "\u5DE5\u5834", number: "012", customer: "\u57FC\u7389\u81EA\u52D5\u8ECA\u90E8\u54C1\u5DE5\u5834", minutes: 6400, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-05-26"), checkDueDate: /* @__PURE__ */ new Date("2025-05-21"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null },
+          { type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB", number: "013", customer: "\u4E38\u306E\u5185\u30D3\u30B8\u30CD\u30B9\u30BB\u30F3\u30BF\u30FC", minutes: 3400, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-02-13"), checkDueDate: /* @__PURE__ */ new Date("2025-02-08"), hasCoating: "yes", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148C" },
+          { type: "\u30DE\u30F3\u30B7\u30E7\u30F3", number: "014", customer: "\u30D5\u30A9\u30EC\u30B9\u30C8\u30DE\u30F3\u30B7\u30E7\u30F3", minutes: 5800, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-04-24"), checkDueDate: /* @__PURE__ */ new Date("2025-04-19"), hasCoating: "no", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
+          { type: "\u5DE5\u5834", number: "015", customer: "\u795E\u5948\u5DDD\u5316\u5B66\u5DE5\u5834", minutes: 4e3, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-03-15"), checkDueDate: /* @__PURE__ */ new Date("2025-03-10"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
+          { type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB", number: "016", customer: "\u516D\u672C\u6728\u30D2\u30EB\u30BA\u30AA\u30D5\u30A3\u30B9", minutes: 7e3, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-05-29"), checkDueDate: /* @__PURE__ */ new Date("2025-05-24"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null },
+          { type: "\u30DE\u30F3\u30B7\u30E7\u30F3", number: "017", customer: "\u30AA\u30FC\u30B7\u30E3\u30F3\u30D3\u30E5\u30FC\u30DE\u30F3\u30B7\u30E7\u30F3", minutes: 3200, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-01-11"), checkDueDate: /* @__PURE__ */ new Date("2025-01-06"), hasCoating: "yes", hasLine: "yes", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148C" },
+          { type: "\u5DE5\u5834", number: "018", customer: "\u8328\u57CE\u96FB\u5B50\u90E8\u54C1\u5DE5\u5834", minutes: 5600, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-04-21"), checkDueDate: /* @__PURE__ */ new Date("2025-04-16"), hasCoating: "no", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
+          { type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB", number: "019", customer: "\u9280\u5EA7\u30B3\u30DE\u30FC\u30B7\u30E3\u30EB\u30D3\u30EB", minutes: 4400, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-03-16"), checkDueDate: /* @__PURE__ */ new Date("2025-03-11"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
+          { type: "\u30DE\u30F3\u30B7\u30E7\u30F3", number: "020", customer: "\u30CF\u30A4\u30C4\u30B0\u30EA\u30FC\u30F3\u30DE\u30F3\u30B7\u30E7\u30F3", minutes: 6200, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-05-27"), checkDueDate: /* @__PURE__ */ new Date("2025-05-22"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null }
         ];
         const sampleVehicles = [];
-        for (const house of houseNames) {
+        for (const building of buildingProjects) {
           sampleVehicles.push({
-            vehicleNumber: `\u5BB6-${house.number}`,
+            vehicleNumber: `${building.type}-${building.number}`,
             vehicleTypeId,
             category: "\u4E00\u822C",
-            customerName: house.customer,
+            customerName: building.customer,
             status: "in_progress",
-            targetTotalMinutes: house.minutes * 1.2,
+            targetTotalMinutes: building.minutes * 1.2,
             // 目標時間は実績の1.2倍
-            desiredDeliveryDate: house.desiredDeliveryDate,
-            checkDueDate: house.checkDueDate,
-            hasCoating: house.hasCoating,
-            hasLine: house.hasLine,
-            hasPreferredNumber: house.hasPreferredNumber,
-            hasTireReplacement: house.hasTireReplacement,
-            outsourcingDestination: house.outsourcingDestination
+            desiredDeliveryDate: building.desiredDeliveryDate,
+            checkDueDate: building.checkDueDate,
+            hasCoating: building.hasCoating,
+            hasLine: building.hasLine,
+            hasPreferredNumber: building.hasPreferredNumber,
+            hasTireReplacement: building.hasTireReplacement,
+            outsourcingDestination: building.outsourcingDestination
           });
         }
         await db.insert(schema_exports.vehicles).values(sampleVehicles);
-        console.log("[Init] \u2705 Created 20 sample vehicles (\u5BB6-001\u301C\u5BB6-020)");
+        console.log("[Init] \u2705 Created 20 sample vehicles (\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB/\u30DE\u30F3\u30B7\u30E7\u30F3/\u5DE5\u5834 \u8A0820\u4EF6)");
         try {
-          const vehicles2 = await db.select({ id: schema_exports.vehicles.id, vehicleNumber: schema_exports.vehicles.vehicleNumber, customerName: schema_exports.vehicles.customerName }).from(schema_exports.vehicles).where(like(schema_exports.vehicles.vehicleNumber, "\u5BB6-%")).orderBy(schema_exports.vehicles.id);
+          const { or: or3 } = await import("drizzle-orm");
+          const vehicles2 = await db.select({ id: schema_exports.vehicles.id, vehicleNumber: schema_exports.vehicles.vehicleNumber, customerName: schema_exports.vehicles.customerName }).from(schema_exports.vehicles).where(
+            or3(
+              like(schema_exports.vehicles.vehicleNumber, "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB-%"),
+              like(schema_exports.vehicles.vehicleNumber, "\u30DE\u30F3\u30B7\u30E7\u30F3-%"),
+              like(schema_exports.vehicles.vehicleNumber, "\u5DE5\u5834-%")
+            )
+          ).orderBy(schema_exports.vehicles.id);
           const processes2 = await db.select({ id: schema_exports.processes.id, name: schema_exports.processes.name }).from(schema_exports.processes).orderBy(schema_exports.processes.displayOrder);
           const adminUser = await db.select({ id: schema_exports.users.id }).from(schema_exports.users).where(eq15(schema_exports.users.role, "admin")).limit(1);
           const staffUsers = await db.select({ id: schema_exports.users.id }).from(schema_exports.users).where(eq15(schema_exports.users.role, "field_worker")).limit(20);
@@ -9685,12 +9705,27 @@ async function initializeSampleData(db) {
             const baseMonth = 11;
             const baseDay = 1;
             const baseDate = new Date(baseYear, baseMonth, baseDay, 8, 0, 0);
-            const houseNamesMap = /* @__PURE__ */ new Map([
-              ["001", { minutes: 480 }],
-              ["002", { minutes: 720 }],
-              ["003", { minutes: 360 }],
-              ["004", { minutes: 600 }],
-              ["005", { minutes: 240 }]
+            const buildingProjectsMap = /* @__PURE__ */ new Map([
+              ["001", { minutes: 4800, type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB" }],
+              ["002", { minutes: 7200, type: "\u30DE\u30F3\u30B7\u30E7\u30F3" }],
+              ["003", { minutes: 3600, type: "\u5DE5\u5834" }],
+              ["004", { minutes: 6e3, type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB" }],
+              ["005", { minutes: 2400, type: "\u30DE\u30F3\u30B7\u30E7\u30F3" }],
+              ["006", { minutes: 5400, type: "\u5DE5\u5834" }],
+              ["007", { minutes: 4200, type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB" }],
+              ["008", { minutes: 6800, type: "\u30DE\u30F3\u30B7\u30E7\u30F3" }],
+              ["009", { minutes: 3800, type: "\u5DE5\u5834" }],
+              ["010", { minutes: 5200, type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB" }],
+              ["011", { minutes: 4600, type: "\u30DE\u30F3\u30B7\u30E7\u30F3" }],
+              ["012", { minutes: 6400, type: "\u5DE5\u5834" }],
+              ["013", { minutes: 3400, type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB" }],
+              ["014", { minutes: 5800, type: "\u30DE\u30F3\u30B7\u30E7\u30F3" }],
+              ["015", { minutes: 4e3, type: "\u5DE5\u5834" }],
+              ["016", { minutes: 7e3, type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB" }],
+              ["017", { minutes: 3200, type: "\u30DE\u30F3\u30B7\u30E7\u30F3" }],
+              ["018", { minutes: 5600, type: "\u5DE5\u5834" }],
+              ["019", { minutes: 4400, type: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB" }],
+              ["020", { minutes: 6200, type: "\u30DE\u30F3\u30B7\u30E7\u30F3" }]
             ]);
             for (let userIdx = 0; userIdx < Math.min(allUsers.length, 21); userIdx++) {
               const userId = allUsers[userIdx].id;
@@ -9719,20 +9754,25 @@ async function initializeSampleData(db) {
             }
             for (let vehicleIdx = 0; vehicleIdx < vehicles2.length; vehicleIdx++) {
               const vehicle = vehicles2[vehicleIdx];
-              const vehicleNumber = vehicle.vehicleNumber.split("-")[1];
-              const houseData = houseNamesMap.get(vehicleNumber);
-              const totalMinutes = houseData?.minutes || 480;
+              const vehicleNumberParts = vehicle.vehicleNumber.split("-");
+              const buildingNumber = vehicleNumberParts[vehicleNumberParts.length - 1];
+              const buildingData = buildingProjectsMap.get(buildingNumber);
+              const totalMinutes = buildingData?.minutes || 4800;
               const processMinutes = [
-                Math.floor(totalMinutes * 0.3),
-                // 基礎工事: 30%
+                Math.floor(totalMinutes * 0.25),
+                // 基礎工事: 25%
                 Math.floor(totalMinutes * 0.2),
                 // 下地工事: 20%
-                Math.floor(totalMinutes * 0.2),
-                // 電気工事: 20%
-                Math.floor(totalMinutes * 0.2),
-                // 水道工事: 20%
-                Math.floor(totalMinutes * 0.1)
-                // その他: 10%
+                Math.floor(totalMinutes * 0.15),
+                // 電気工事: 15%
+                Math.floor(totalMinutes * 0.15),
+                // 水道工事: 15%
+                Math.floor(totalMinutes * 0.1),
+                // 内装工事: 10%
+                Math.floor(totalMinutes * 0.1),
+                // 外装工事: 10%
+                Math.floor(totalMinutes * 0.05)
+                // その他: 5%
               ];
               const vehicleWorkDate = new Date(baseDate);
               vehicleWorkDate.setDate(vehicleWorkDate.getDate() + vehicleIdx);

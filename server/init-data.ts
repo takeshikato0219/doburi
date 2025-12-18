@@ -213,12 +213,18 @@ async function initializeSampleData(db: any) {
         console.log("[Init] 既存のサンプルデータを削除中...");
         
         try {
-            // 既存のサンプル車両とその関連データを削除
-            const { inArray } = await import("drizzle-orm");
+            // 既存のサンプル車両とその関連データを削除（ゼネコン向け建物）
+            const { inArray, or } = await import("drizzle-orm");
             const existingSampleVehicles = await db
                 .select({ id: schema.vehicles.id })
                 .from(schema.vehicles)
-                .where(like(schema.vehicles.vehicleNumber, "家-%"));
+                .where(
+                    or(
+                        like(schema.vehicles.vehicleNumber, "オフィスビル-%"),
+                        like(schema.vehicles.vehicleNumber, "マンション-%"),
+                        like(schema.vehicles.vehicleNumber, "工場-%")
+                    )
+                );
             
             if (existingSampleVehicles.length > 0) {
                 const vehicleIds = existingSampleVehicles.map(v => v.id);
@@ -346,11 +352,18 @@ async function initializeSampleData(db: any) {
         try {
             console.log("[Init] Starting sample vehicle initialization...");
             
-            // 既存のサンプル車両とその作業記録を削除
+            // 既存のサンプル車両とその作業記録を削除（ゼネコン向け建物）
+            const { or } = await import("drizzle-orm");
             const existingSampleVehicles = await db
                 .select({ id: schema.vehicles.id })
                 .from(schema.vehicles)
-                .where(like(schema.vehicles.vehicleNumber, "家-%"));
+                .where(
+                    or(
+                        like(schema.vehicles.vehicleNumber, "オフィスビル-%"),
+                        like(schema.vehicles.vehicleNumber, "マンション-%"),
+                        like(schema.vehicles.vehicleNumber, "工場-%")
+                    )
+                );
             
             console.log(`[Init] Found ${existingSampleVehicles.length} existing sample vehicles`);
             
@@ -379,57 +392,64 @@ async function initializeSampleData(db: any) {
                 console.error("[Init] Please ensure vehicle types are initialized before sample data.");
                 } else {
                     const vehicleTypeId = vehicleTypes[0].id;
-                    // 建設現場のサンプルデータ（20件の家）
-                    const houseNames = [
-                        { number: "001", customer: "田中太郎さんの家", minutes: 480, desiredDeliveryDate: new Date("2024-12-15"), checkDueDate: new Date("2024-12-10"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
-                        { number: "002", customer: "佐藤花子さんの家", minutes: 720, desiredDeliveryDate: new Date("2024-12-20"), checkDueDate: new Date("2024-12-15"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
-                        { number: "003", customer: "鈴木一郎さんの家", minutes: 360, desiredDeliveryDate: new Date("2024-12-18"), checkDueDate: new Date("2024-12-12"), hasCoating: "yes" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
-                        { number: "004", customer: "山田次郎さんの家", minutes: 600, desiredDeliveryDate: new Date("2024-12-25"), checkDueDate: new Date("2024-12-20"), hasCoating: "no" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先C" },
-                        { number: "005", customer: "中村三郎さんの家", minutes: 240, desiredDeliveryDate: new Date("2024-12-12"), checkDueDate: new Date("2024-12-08"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: null },
-                        { number: "006", customer: "伊藤四郎さんの家", minutes: 540, desiredDeliveryDate: new Date("2024-12-22"), checkDueDate: new Date("2024-12-17"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
-                        { number: "007", customer: "高橋五郎さんの家", minutes: 420, desiredDeliveryDate: new Date("2024-12-16"), checkDueDate: new Date("2024-12-11"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
-                        { number: "008", customer: "渡辺六郎さんの家", minutes: 680, desiredDeliveryDate: new Date("2024-12-28"), checkDueDate: new Date("2024-12-23"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
-                        { number: "009", customer: "斎藤七郎さんの家", minutes: 380, desiredDeliveryDate: new Date("2024-12-14"), checkDueDate: new Date("2024-12-09"), hasCoating: "yes" as const, hasLine: "yes" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先C" },
-                        { number: "010", customer: "小林八郎さんの家", minutes: 520, desiredDeliveryDate: new Date("2024-12-19"), checkDueDate: new Date("2024-12-14"), hasCoating: "no" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
-                        { number: "011", customer: "加藤九郎さんの家", minutes: 460, desiredDeliveryDate: new Date("2024-12-17"), checkDueDate: new Date("2024-12-12"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
-                        { number: "012", customer: "吉田十郎さんの家", minutes: 640, desiredDeliveryDate: new Date("2024-12-26"), checkDueDate: new Date("2024-12-21"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
-                        { number: "013", customer: "山本十一さんの家", minutes: 340, desiredDeliveryDate: new Date("2024-12-13"), checkDueDate: new Date("2024-12-08"), hasCoating: "yes" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先C" },
-                        { number: "014", customer: "松本十二さんの家", minutes: 580, desiredDeliveryDate: new Date("2024-12-24"), checkDueDate: new Date("2024-12-19"), hasCoating: "no" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
-                        { number: "015", customer: "井上十三さんの家", minutes: 400, desiredDeliveryDate: new Date("2024-12-15"), checkDueDate: new Date("2024-12-10"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
-                        { number: "016", customer: "木村十四さんの家", minutes: 700, desiredDeliveryDate: new Date("2024-12-29"), checkDueDate: new Date("2024-12-24"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
-                        { number: "017", customer: "林十五さんの家", minutes: 320, desiredDeliveryDate: new Date("2024-12-11"), checkDueDate: new Date("2024-12-06"), hasCoating: "yes" as const, hasLine: "yes" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先C" },
-                        { number: "018", customer: "斉藤十六さんの家", minutes: 560, desiredDeliveryDate: new Date("2024-12-21"), checkDueDate: new Date("2024-12-16"), hasCoating: "no" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
-                        { number: "019", customer: "田村十七さんの家", minutes: 440, desiredDeliveryDate: new Date("2024-12-16"), checkDueDate: new Date("2024-12-11"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
-                        { number: "020", customer: "中島十八さんの家", minutes: 620, desiredDeliveryDate: new Date("2024-12-27"), checkDueDate: new Date("2024-12-22"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
+                    // ゼネコン向け建設現場のサンプルデータ（20件の建物）
+                    const buildingProjects = [
+                        { type: "オフィスビル", number: "001", customer: "東京中央オフィスビル", minutes: 4800, desiredDeliveryDate: new Date("2025-03-15"), checkDueDate: new Date("2025-03-10"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
+                        { type: "マンション", number: "002", customer: "サンライズマンション", minutes: 7200, desiredDeliveryDate: new Date("2025-04-20"), checkDueDate: new Date("2025-04-15"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
+                        { type: "工場", number: "003", customer: "関東製造工場", minutes: 3600, desiredDeliveryDate: new Date("2025-02-18"), checkDueDate: new Date("2025-02-12"), hasCoating: "yes" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
+                        { type: "オフィスビル", number: "004", customer: "新宿ビジネスタワー", minutes: 6000, desiredDeliveryDate: new Date("2025-05-25"), checkDueDate: new Date("2025-05-20"), hasCoating: "no" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先C" },
+                        { type: "マンション", number: "005", customer: "パークサイドマンション", minutes: 2400, desiredDeliveryDate: new Date("2025-01-12"), checkDueDate: new Date("2025-01-08"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: null },
+                        { type: "工場", number: "006", customer: "横浜物流センター", minutes: 5400, desiredDeliveryDate: new Date("2025-04-22"), checkDueDate: new Date("2025-04-17"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
+                        { type: "オフィスビル", number: "007", customer: "品川グランドタワー", minutes: 4200, desiredDeliveryDate: new Date("2025-03-16"), checkDueDate: new Date("2025-03-11"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
+                        { type: "マンション", number: "008", customer: "リバーサイドマンション", minutes: 6800, desiredDeliveryDate: new Date("2025-05-28"), checkDueDate: new Date("2025-05-23"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
+                        { type: "工場", number: "009", customer: "千葉食品工場", minutes: 3800, desiredDeliveryDate: new Date("2025-02-14"), checkDueDate: new Date("2025-02-09"), hasCoating: "yes" as const, hasLine: "yes" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先C" },
+                        { type: "オフィスビル", number: "010", customer: "渋谷スクエアビル", minutes: 5200, desiredDeliveryDate: new Date("2025-04-19"), checkDueDate: new Date("2025-04-14"), hasCoating: "no" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
+                        { type: "マンション", number: "011", customer: "シティパークマンション", minutes: 4600, desiredDeliveryDate: new Date("2025-03-17"), checkDueDate: new Date("2025-03-12"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
+                        { type: "工場", number: "012", customer: "埼玉自動車部品工場", minutes: 6400, desiredDeliveryDate: new Date("2025-05-26"), checkDueDate: new Date("2025-05-21"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
+                        { type: "オフィスビル", number: "013", customer: "丸の内ビジネスセンター", minutes: 3400, desiredDeliveryDate: new Date("2025-02-13"), checkDueDate: new Date("2025-02-08"), hasCoating: "yes" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先C" },
+                        { type: "マンション", number: "014", customer: "フォレストマンション", minutes: 5800, desiredDeliveryDate: new Date("2025-04-24"), checkDueDate: new Date("2025-04-19"), hasCoating: "no" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
+                        { type: "工場", number: "015", customer: "神奈川化学工場", minutes: 4000, desiredDeliveryDate: new Date("2025-03-15"), checkDueDate: new Date("2025-03-10"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
+                        { type: "オフィスビル", number: "016", customer: "六本木ヒルズオフィス", minutes: 7000, desiredDeliveryDate: new Date("2025-05-29"), checkDueDate: new Date("2025-05-24"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
+                        { type: "マンション", number: "017", customer: "オーシャンビューマンション", minutes: 3200, desiredDeliveryDate: new Date("2025-01-11"), checkDueDate: new Date("2025-01-06"), hasCoating: "yes" as const, hasLine: "yes" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先C" },
+                        { type: "工場", number: "018", customer: "茨城電子部品工場", minutes: 5600, desiredDeliveryDate: new Date("2025-04-21"), checkDueDate: new Date("2025-04-16"), hasCoating: "no" as const, hasLine: "no" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "no" as const, outsourcingDestination: "外注先A" },
+                        { type: "オフィスビル", number: "019", customer: "銀座コマーシャルビル", minutes: 4400, desiredDeliveryDate: new Date("2025-03-16"), checkDueDate: new Date("2025-03-11"), hasCoating: "yes" as const, hasLine: "no" as const, hasPreferredNumber: "no" as const, hasTireReplacement: "summer" as const, outsourcingDestination: "外注先B" },
+                        { type: "マンション", number: "020", customer: "ハイツグリーンマンション", minutes: 6200, desiredDeliveryDate: new Date("2025-05-27"), checkDueDate: new Date("2025-05-22"), hasCoating: "no" as const, hasLine: "yes" as const, hasPreferredNumber: "yes" as const, hasTireReplacement: "winter" as const, outsourcingDestination: null },
                     ];
                     const sampleVehicles = [];
-                    for (const house of houseNames) {
+                    for (const building of buildingProjects) {
                         sampleVehicles.push({
-                            vehicleNumber: `家-${house.number}`,
+                            vehicleNumber: `${building.type}-${building.number}`,
                             vehicleTypeId,
                             category: "一般" as const,
-                            customerName: house.customer,
+                            customerName: building.customer,
                             status: "in_progress" as const,
-                            targetTotalMinutes: house.minutes * 1.2, // 目標時間は実績の1.2倍
-                            desiredDeliveryDate: house.desiredDeliveryDate,
-                            checkDueDate: house.checkDueDate,
-                            hasCoating: house.hasCoating,
-                            hasLine: house.hasLine,
-                            hasPreferredNumber: house.hasPreferredNumber,
-                            hasTireReplacement: house.hasTireReplacement,
-                            outsourcingDestination: house.outsourcingDestination,
+                            targetTotalMinutes: building.minutes * 1.2, // 目標時間は実績の1.2倍
+                            desiredDeliveryDate: building.desiredDeliveryDate,
+                            checkDueDate: building.checkDueDate,
+                            hasCoating: building.hasCoating,
+                            hasLine: building.hasLine,
+                            hasPreferredNumber: building.hasPreferredNumber,
+                            hasTireReplacement: building.hasTireReplacement,
+                            outsourcingDestination: building.outsourcingDestination,
                         });
                     }
                     await db.insert(schema.vehicles).values(sampleVehicles);
-                    console.log("[Init] ✅ Created 20 sample vehicles (家-001〜家-020)");
+                    console.log("[Init] ✅ Created 20 sample vehicles (オフィスビル/マンション/工場 計20件)");
                     
                     // 3. 作業記録のサンプルデータを追加
                     try {
-                        // 挿入した車両を取得
+                        // 挿入した車両を取得（ゼネコン向け建物）
+                        const { or } = await import("drizzle-orm");
                         const vehicles = await db
                             .select({ id: schema.vehicles.id, vehicleNumber: schema.vehicles.vehicleNumber, customerName: schema.vehicles.customerName })
                             .from(schema.vehicles)
-                            .where(like(schema.vehicles.vehicleNumber, "家-%"))
+                            .where(
+                                or(
+                                    like(schema.vehicles.vehicleNumber, "オフィスビル-%"),
+                                    like(schema.vehicles.vehicleNumber, "マンション-%"),
+                                    like(schema.vehicles.vehicleNumber, "工場-%")
+                                )
+                            )
                             .orderBy(schema.vehicles.id);
                         
                         const processes = await db
@@ -478,13 +498,28 @@ async function initializeSampleData(db: any) {
                             // 基準日を2024年12月1日に設定（1ヶ月分のデータを作成）
                             const baseDate = new Date(baseYear, baseMonth, baseDay, 8, 0, 0);
                             
-                            // houseNamesを再定義（スコープの問題を回避）
-                            const houseNamesMap = new Map([
-                                ["001", { minutes: 480 }],
-                                ["002", { minutes: 720 }],
-                                ["003", { minutes: 360 }],
-                                ["004", { minutes: 600 }],
-                                ["005", { minutes: 240 }],
+                            // buildingProjectsを再定義（スコープの問題を回避）
+                            const buildingProjectsMap = new Map([
+                                ["001", { minutes: 4800, type: "オフィスビル" }],
+                                ["002", { minutes: 7200, type: "マンション" }],
+                                ["003", { minutes: 3600, type: "工場" }],
+                                ["004", { minutes: 6000, type: "オフィスビル" }],
+                                ["005", { minutes: 2400, type: "マンション" }],
+                                ["006", { minutes: 5400, type: "工場" }],
+                                ["007", { minutes: 4200, type: "オフィスビル" }],
+                                ["008", { minutes: 6800, type: "マンション" }],
+                                ["009", { minutes: 3800, type: "工場" }],
+                                ["010", { minutes: 5200, type: "オフィスビル" }],
+                                ["011", { minutes: 4600, type: "マンション" }],
+                                ["012", { minutes: 6400, type: "工場" }],
+                                ["013", { minutes: 3400, type: "オフィスビル" }],
+                                ["014", { minutes: 5800, type: "マンション" }],
+                                ["015", { minutes: 4000, type: "工場" }],
+                                ["016", { minutes: 7000, type: "オフィスビル" }],
+                                ["017", { minutes: 3200, type: "マンション" }],
+                                ["018", { minutes: 5600, type: "工場" }],
+                                ["019", { minutes: 4400, type: "オフィスビル" }],
+                                ["020", { minutes: 6200, type: "マンション" }],
                             ]);
                             
                             // 各ユーザー（管理者とスタッフ）に対して、1ヶ月分（30日間）の作業記録を作成
@@ -528,17 +563,20 @@ async function initializeSampleData(db: any) {
                             // 既存の作業記録も追加（車両ごとの作業記録）
                             for (let vehicleIdx = 0; vehicleIdx < vehicles.length; vehicleIdx++) {
                                 const vehicle = vehicles[vehicleIdx];
-                                const vehicleNumber = vehicle.vehicleNumber.split("-")[1];
-                                const houseData = houseNamesMap.get(vehicleNumber);
-                                const totalMinutes = houseData?.minutes || 480;
+                                const vehicleNumberParts = vehicle.vehicleNumber.split("-");
+                                const buildingNumber = vehicleNumberParts[vehicleNumberParts.length - 1];
+                                const buildingData = buildingProjectsMap.get(buildingNumber);
+                                const totalMinutes = buildingData?.minutes || 4800;
                                 
-                                // 各工程に作業時間を分散
+                                // 各工程に作業時間を分散（ゼネコン向け）
                                 const processMinutes = [
-                                    Math.floor(totalMinutes * 0.3), // 基礎工事: 30%
-                                    Math.floor(totalMinutes * 0.2), // 下地工事: 20%
-                                    Math.floor(totalMinutes * 0.2), // 電気工事: 20%
-                                    Math.floor(totalMinutes * 0.2), // 水道工事: 20%
-                                    Math.floor(totalMinutes * 0.1), // その他: 10%
+                                    Math.floor(totalMinutes * 0.25), // 基礎工事: 25%
+                                    Math.floor(totalMinutes * 0.20), // 下地工事: 20%
+                                    Math.floor(totalMinutes * 0.15), // 電気工事: 15%
+                                    Math.floor(totalMinutes * 0.15), // 水道工事: 15%
+                                    Math.floor(totalMinutes * 0.10), // 内装工事: 10%
+                                    Math.floor(totalMinutes * 0.10), // 外装工事: 10%
+                                    Math.floor(totalMinutes * 0.05), // その他: 5%
                                 ];
                                 
                                 // 各案件ごとに開始日時を少しずらす（基準日を使用）
