@@ -1366,6 +1366,80 @@ var init_attendance = __esm({
   }
 });
 
+// server/routers/sampleData.ts
+var sampleData_exports = {};
+__export(sampleData_exports, {
+  SAMPLE_PROCESSES: () => SAMPLE_PROCESSES,
+  SAMPLE_VEHICLES: () => SAMPLE_VEHICLES,
+  getSampleWorkRecords: () => getSampleWorkRecords
+});
+function getSampleWorkRecords(userId) {
+  const baseDate = /* @__PURE__ */ new Date("2024-12-01T08:00:00+09:00");
+  const records = [];
+  for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
+    const workDate = new Date(baseDate);
+    workDate.setDate(workDate.getDate() + dayOffset);
+    for (let recordIdx = 0; recordIdx < 2; recordIdx++) {
+      const vehicleId = dayOffset % 20 + 1;
+      const processId = recordIdx % 6 + 1;
+      const workMinutes = 120 + recordIdx * 120 + dayOffset * 40;
+      const startTime = new Date(workDate);
+      startTime.setHours(8 + recordIdx * 8, 0, 0, 0);
+      const endTime = new Date(startTime);
+      endTime.setMinutes(endTime.getMinutes() + workMinutes);
+      records.push({
+        id: records.length + 1,
+        userId,
+        vehicleId,
+        processId,
+        startTime,
+        endTime,
+        workDescription: `${SAMPLE_PROCESSES[processId - 1]?.name || "\u4F5C\u696D"}\uFF08${SAMPLE_VEHICLES[vehicleId - 1]?.customerName || "\u5EFA\u7269"}\uFF09`,
+        vehicleNumber: SAMPLE_VEHICLES[vehicleId - 1]?.vehicleNumber || "\u4E0D\u660E",
+        processName: SAMPLE_PROCESSES[processId - 1]?.name || "\u4E0D\u660E",
+        durationMinutes: workMinutes
+      });
+    }
+  }
+  return records;
+}
+var SAMPLE_VEHICLES, SAMPLE_PROCESSES;
+var init_sampleData = __esm({
+  "server/routers/sampleData.ts"() {
+    "use strict";
+    SAMPLE_VEHICLES = [
+      { id: 1, vehicleNumber: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB-001", customerName: "\u6771\u4EAC\u4E2D\u592E\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB", status: "in_progress", totalMinutes: 5760, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-03-15"), checkDueDate: /* @__PURE__ */ new Date("2025-03-10"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
+      { id: 2, vehicleNumber: "\u30DE\u30F3\u30B7\u30E7\u30F3-002", customerName: "\u30B5\u30F3\u30E9\u30A4\u30BA\u30DE\u30F3\u30B7\u30E7\u30F3", status: "in_progress", totalMinutes: 8640, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-04-20"), checkDueDate: /* @__PURE__ */ new Date("2025-04-15"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
+      { id: 3, vehicleNumber: "\u5DE5\u5834-003", customerName: "\u95A2\u6771\u88FD\u9020\u5DE5\u5834", status: "in_progress", totalMinutes: 4320, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-02-18"), checkDueDate: /* @__PURE__ */ new Date("2025-02-12"), hasCoating: "yes", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null },
+      { id: 4, vehicleNumber: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB-004", customerName: "\u65B0\u5BBF\u30D3\u30B8\u30CD\u30B9\u30BF\u30EF\u30FC", status: "in_progress", totalMinutes: 7200, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-05-25"), checkDueDate: /* @__PURE__ */ new Date("2025-05-20"), hasCoating: "no", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148C" },
+      { id: 5, vehicleNumber: "\u30DE\u30F3\u30B7\u30E7\u30F3-005", customerName: "\u30D1\u30FC\u30AF\u30B5\u30A4\u30C9\u30DE\u30F3\u30B7\u30E7\u30F3", status: "in_progress", totalMinutes: 2880, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-01-12"), checkDueDate: /* @__PURE__ */ new Date("2025-01-08"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: null },
+      { id: 6, vehicleNumber: "\u5DE5\u5834-006", customerName: "\u6A2A\u6D5C\u7269\u6D41\u30BB\u30F3\u30BF\u30FC", status: "in_progress", totalMinutes: 6480, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-04-22"), checkDueDate: /* @__PURE__ */ new Date("2025-04-17"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
+      { id: 7, vehicleNumber: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB-007", customerName: "\u54C1\u5DDD\u30B0\u30E9\u30F3\u30C9\u30BF\u30EF\u30FC", status: "in_progress", totalMinutes: 5040, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-03-16"), checkDueDate: /* @__PURE__ */ new Date("2025-03-11"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
+      { id: 8, vehicleNumber: "\u30DE\u30F3\u30B7\u30E7\u30F3-008", customerName: "\u30EA\u30D0\u30FC\u30B5\u30A4\u30C9\u30DE\u30F3\u30B7\u30E7\u30F3", status: "in_progress", totalMinutes: 8160, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-05-28"), checkDueDate: /* @__PURE__ */ new Date("2025-05-23"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null },
+      { id: 9, vehicleNumber: "\u5DE5\u5834-009", customerName: "\u5343\u8449\u98DF\u54C1\u5DE5\u5834", status: "in_progress", totalMinutes: 4560, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-02-14"), checkDueDate: /* @__PURE__ */ new Date("2025-02-09"), hasCoating: "yes", hasLine: "yes", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148C" },
+      { id: 10, vehicleNumber: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB-010", customerName: "\u6E0B\u8C37\u30B9\u30AF\u30A8\u30A2\u30D3\u30EB", status: "in_progress", totalMinutes: 6240, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-04-19"), checkDueDate: /* @__PURE__ */ new Date("2025-04-14"), hasCoating: "no", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
+      { id: 11, vehicleNumber: "\u30DE\u30F3\u30B7\u30E7\u30F3-011", customerName: "\u30B7\u30C6\u30A3\u30D1\u30FC\u30AF\u30DE\u30F3\u30B7\u30E7\u30F3", status: "in_progress", totalMinutes: 5520, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-03-17"), checkDueDate: /* @__PURE__ */ new Date("2025-03-12"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
+      { id: 12, vehicleNumber: "\u5DE5\u5834-012", customerName: "\u57FC\u7389\u81EA\u52D5\u8ECA\u90E8\u54C1\u5DE5\u5834", status: "in_progress", totalMinutes: 7680, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-05-26"), checkDueDate: /* @__PURE__ */ new Date("2025-05-21"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null },
+      { id: 13, vehicleNumber: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB-013", customerName: "\u4E38\u306E\u5185\u30D3\u30B8\u30CD\u30B9\u30BB\u30F3\u30BF\u30FC", status: "in_progress", totalMinutes: 4080, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-02-13"), checkDueDate: /* @__PURE__ */ new Date("2025-02-08"), hasCoating: "yes", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148C" },
+      { id: 14, vehicleNumber: "\u30DE\u30F3\u30B7\u30E7\u30F3-014", customerName: "\u30D5\u30A9\u30EC\u30B9\u30C8\u30DE\u30F3\u30B7\u30E7\u30F3", status: "in_progress", totalMinutes: 6960, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-04-24"), checkDueDate: /* @__PURE__ */ new Date("2025-04-19"), hasCoating: "no", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
+      { id: 15, vehicleNumber: "\u5DE5\u5834-015", customerName: "\u795E\u5948\u5DDD\u5316\u5B66\u5DE5\u5834", status: "in_progress", totalMinutes: 4800, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-03-15"), checkDueDate: /* @__PURE__ */ new Date("2025-03-10"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
+      { id: 16, vehicleNumber: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB-016", customerName: "\u516D\u672C\u6728\u30D2\u30EB\u30BA\u30AA\u30D5\u30A3\u30B9", status: "in_progress", totalMinutes: 8400, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-05-29"), checkDueDate: /* @__PURE__ */ new Date("2025-05-24"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null },
+      { id: 17, vehicleNumber: "\u30DE\u30F3\u30B7\u30E7\u30F3-017", customerName: "\u30AA\u30FC\u30B7\u30E3\u30F3\u30D3\u30E5\u30FC\u30DE\u30F3\u30B7\u30E7\u30F3", status: "in_progress", totalMinutes: 3840, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-01-11"), checkDueDate: /* @__PURE__ */ new Date("2025-01-06"), hasCoating: "yes", hasLine: "yes", hasPreferredNumber: "no", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148C" },
+      { id: 18, vehicleNumber: "\u5DE5\u5834-018", customerName: "\u8328\u57CE\u96FB\u5B50\u90E8\u54C1\u5DE5\u5834", status: "in_progress", totalMinutes: 6720, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-04-21"), checkDueDate: /* @__PURE__ */ new Date("2025-04-16"), hasCoating: "no", hasLine: "no", hasPreferredNumber: "yes", hasTireReplacement: "no", outsourcingDestination: "\u5916\u6CE8\u5148A" },
+      { id: 19, vehicleNumber: "\u30AA\u30D5\u30A3\u30B9\u30D3\u30EB-019", customerName: "\u9280\u5EA7\u30B3\u30DE\u30FC\u30B7\u30E3\u30EB\u30D3\u30EB", status: "in_progress", totalMinutes: 5280, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-03-16"), checkDueDate: /* @__PURE__ */ new Date("2025-03-11"), hasCoating: "yes", hasLine: "no", hasPreferredNumber: "no", hasTireReplacement: "summer", outsourcingDestination: "\u5916\u6CE8\u5148B" },
+      { id: 20, vehicleNumber: "\u30DE\u30F3\u30B7\u30E7\u30F3-020", customerName: "\u30CF\u30A4\u30C4\u30B0\u30EA\u30FC\u30F3\u30DE\u30F3\u30B7\u30E7\u30F3", status: "in_progress", totalMinutes: 7440, category: "\u4E00\u822C", vehicleTypeId: 1, desiredDeliveryDate: /* @__PURE__ */ new Date("2025-05-27"), checkDueDate: /* @__PURE__ */ new Date("2025-05-22"), hasCoating: "no", hasLine: "yes", hasPreferredNumber: "yes", hasTireReplacement: "winter", outsourcingDestination: null }
+    ];
+    SAMPLE_PROCESSES = [
+      { id: 1, name: "\u57FA\u790E\u5DE5\u4E8B", majorCategory: "\u57FA\u790E" },
+      { id: 2, name: "\u4E0B\u5730\u5DE5\u4E8B", majorCategory: "\u4E0B\u5730" },
+      { id: 3, name: "\u96FB\u6C17\u5DE5\u4E8B", majorCategory: "\u96FB\u6C17" },
+      { id: 4, name: "\u6C34\u9053\u5DE5\u4E8B", majorCategory: "\u6C34\u9053" },
+      { id: 5, name: "\u5185\u88C5\u5DE5\u4E8B", majorCategory: "\u5185\u88C5" },
+      { id: 6, name: "\u5916\u88C5\u5DE5\u4E8B", majorCategory: "\u5916\u88C5" }
+    ];
+  }
+});
+
 // server/routers/backup.ts
 var backup_exports = {};
 __export(backup_exports, {
@@ -2379,8 +2453,9 @@ var workRecordsRouter = createTRPCRouter({
   getTodayRecords: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
     if (!db) {
-      console.warn("[workRecords.getTodayRecords] Database connection failed");
-      return [];
+      console.warn("[workRecords.getTodayRecords] Database connection failed, returning sample data");
+      const { getSampleWorkRecords: getSampleWorkRecords2 } = await Promise.resolve().then(() => (init_sampleData(), sampleData_exports));
+      return getSampleWorkRecords2(ctx.user.id);
     }
     const jstNow = getJSTNow2();
     const today = new Date(jstNow.year, jstNow.month - 1, jstNow.day);
@@ -2823,8 +2898,16 @@ var vehiclesRouter = createTRPCRouter({
   ).query(async ({ input }) => {
     const db = await getDb();
     if (!db) {
-      console.warn("[vehicles.list] Database connection failed");
-      return [];
+      console.warn("[vehicles.list] Database connection failed, returning sample data");
+      const { SAMPLE_VEHICLES: SAMPLE_VEHICLES2 } = await Promise.resolve().then(() => (init_sampleData(), sampleData_exports));
+      let vehicles3 = SAMPLE_VEHICLES2;
+      if (input.status) {
+        vehicles3 = vehicles3.filter((v) => v.status === input.status);
+      }
+      return vehicles3.map((v) => ({
+        ...v,
+        outsourcing: []
+      }));
     }
     let vehicles2;
     if (input.status) {
@@ -5107,7 +5190,22 @@ var analyticsRouter = createTRPCRouter({
   getVehicleProductionTimes: protectedProcedure.query(async () => {
     const db = await getDb();
     if (!db) {
-      return [];
+      console.warn("[analytics.getVehicleProductionTimes] Database connection failed, returning sample data");
+      const { SAMPLE_VEHICLES: SAMPLE_VEHICLES2, SAMPLE_PROCESSES: SAMPLE_PROCESSES2 } = await Promise.resolve().then(() => (init_sampleData(), sampleData_exports));
+      return SAMPLE_VEHICLES2.slice(0, 10).map((v) => ({
+        vehicleId: v.id,
+        vehicleNumber: v.vehicleNumber,
+        customerName: v.customerName,
+        totalMinutes: v.totalMinutes,
+        desiredDeliveryDate: v.desiredDeliveryDate,
+        completionDate: null,
+        processes: SAMPLE_PROCESSES2.map((p, idx) => ({
+          processId: p.id,
+          processName: p.name,
+          totalMinutes: Math.floor(v.totalMinutes / SAMPLE_PROCESSES2.length) + idx * 10,
+          details: []
+        }))
+      }));
     }
     const rows = await db.select({
       vehicleId: schema_exports.workRecords.vehicleId,
@@ -5385,7 +5483,15 @@ var analyticsRouter = createTRPCRouter({
     const db = await getDb();
     const pool = getPool();
     if (!db || !pool) {
-      return [];
+      console.warn("[analytics.getActiveVehiclesWithWorkTime] Database connection failed, returning sample data");
+      const { SAMPLE_VEHICLES: SAMPLE_VEHICLES2 } = await Promise.resolve().then(() => (init_sampleData(), sampleData_exports));
+      return SAMPLE_VEHICLES2.filter((v) => v.totalMinutes >= 300).map((v) => ({
+        id: v.id,
+        vehicleNumber: v.vehicleNumber,
+        customerName: v.customerName,
+        totalMinutes: v.totalMinutes,
+        vehicleType: "\u30BC\u30CD\u30B3\u30F3\u5411\u3051\u5EFA\u7269"
+      }));
     }
     const vehicles2 = await db.select().from(schema_exports.vehicles).where(eq8(schema_exports.vehicles.status, "in_progress"));
     if (vehicles2.length === 0) {
@@ -5679,9 +5785,24 @@ var analyticsRouter = createTRPCRouter({
     const db = await getDb();
     const pool = getPool();
     if (!db || !pool) {
+      console.warn("[analytics.getTotalWorkTimeTodayYesterday] Database connection failed, returning sample data");
       return {
-        yesterday: [],
-        dayBeforeYesterday: []
+        yesterday: [
+          { majorCategory: "\u57FA\u790E", totalMinutes: 4800 },
+          { majorCategory: "\u4E0B\u5730", totalMinutes: 3600 },
+          { majorCategory: "\u96FB\u6C17", totalMinutes: 2400 },
+          { majorCategory: "\u6C34\u9053", totalMinutes: 1800 },
+          { majorCategory: "\u5185\u88C5", totalMinutes: 1200 },
+          { majorCategory: "\u5916\u88C5", totalMinutes: 900 }
+        ],
+        dayBeforeYesterday: [
+          { majorCategory: "\u57FA\u790E", totalMinutes: 4200 },
+          { majorCategory: "\u4E0B\u5730", totalMinutes: 3200 },
+          { majorCategory: "\u96FB\u6C17", totalMinutes: 2100 },
+          { majorCategory: "\u6C34\u9053", totalMinutes: 1600 },
+          { majorCategory: "\u5185\u88C5", totalMinutes: 1100 },
+          { majorCategory: "\u5916\u88C5", totalMinutes: 800 }
+        ]
       };
     }
     const now = /* @__PURE__ */ new Date();

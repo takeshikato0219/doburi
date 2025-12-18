@@ -67,8 +67,10 @@ export const workRecordsRouter = createTRPCRouter({
     getTodayRecords: protectedProcedure.query(async ({ ctx }) => {
         const db = await getDb();
         if (!db) {
-            console.warn("[workRecords.getTodayRecords] Database connection failed");
-            return [];
+            console.warn("[workRecords.getTodayRecords] Database connection failed, returning sample data");
+            // サンプルデータを返す
+            const { getSampleWorkRecords } = await import("./sampleData");
+            return getSampleWorkRecords(ctx.user!.id);
         }
 
         // 1週間分（今日から7日前まで）の範囲を取得（JSTで取得）
