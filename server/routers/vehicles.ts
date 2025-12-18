@@ -19,6 +19,7 @@ export const vehiclesRouter = createTRPCRouter({
         .query(async ({ input }) => {
             const db = await getDb();
             if (!db) {
+                console.warn("[vehicles.list] Database connection failed");
                 return [];
             }
 

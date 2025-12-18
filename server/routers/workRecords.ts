@@ -63,10 +63,11 @@ export const workRecordsRouter = createTRPCRouter({
         });
     }),
 
-    // 1週間分の作業記録を取得（今日から7日前まで）
+    // 1週間分の作業記録を取得（今日から7日前まで、またはサンプルデータの日付範囲）
     getTodayRecords: protectedProcedure.query(async ({ ctx }) => {
         const db = await getDb();
         if (!db) {
+            console.warn("[workRecords.getTodayRecords] Database connection failed");
             return [];
         }
 
@@ -79,17 +80,29 @@ export const workRecordsRouter = createTRPCRouter({
         const start = startOfDay(weekAgo); // 7日前の開始
         const end = endOfDay(today); // 今日の終了
 
+        // サンプルデータの日付範囲（2024年12月）も含める
+        const sampleDataStart = new Date("2024-12-01T00:00:00+09:00");
+        const sampleDataEnd = new Date("2024-12-31T23:59:59+09:00");
+        
+        // より広い範囲で取得（今日の範囲 + サンプルデータの範囲）
+        const actualStart = start < sampleDataStart ? start : sampleDataStart;
+        const actualEnd = end > sampleDataEnd ? end : sampleDataEnd;
+
+        console.log(`[workRecords.getTodayRecords] Fetching records from ${actualStart.toISOString()} to ${actualEnd.toISOString()}`);
+
         const records = await db
             .select()
             .from(schema.workRecords)
             .where(
                 and(
                     eq(schema.workRecords.userId, ctx.user!.id),
-                    gte(schema.workRecords.startTime, start),
-                    lte(schema.workRecords.startTime, end)
+                    gte(schema.workRecords.startTime, actualStart),
+                    lte(schema.workRecords.startTime, actualEnd)
                 )
             )
             .orderBy(schema.workRecords.startTime);
+
+        console.log(`[workRecords.getTodayRecords] Found ${records.length} records`);
 
         // 車両情報、工程情報を取得
         const vehicles = await db.select().from(schema.vehicles);

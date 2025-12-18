@@ -2375,10 +2375,11 @@ var workRecordsRouter = createTRPCRouter({
       };
     });
   }),
-  // 1週間分の作業記録を取得（今日から7日前まで）
+  // 1週間分の作業記録を取得（今日から7日前まで、またはサンプルデータの日付範囲）
   getTodayRecords: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
     if (!db) {
+      console.warn("[workRecords.getTodayRecords] Database connection failed");
       return [];
     }
     const jstNow = getJSTNow2();
@@ -2387,13 +2388,19 @@ var workRecordsRouter = createTRPCRouter({
     weekAgo.setDate(weekAgo.getDate() - 7);
     const start = startOfDay(weekAgo);
     const end = endOfDay(today);
+    const sampleDataStart = /* @__PURE__ */ new Date("2024-12-01T00:00:00+09:00");
+    const sampleDataEnd = /* @__PURE__ */ new Date("2024-12-31T23:59:59+09:00");
+    const actualStart = start < sampleDataStart ? start : sampleDataStart;
+    const actualEnd = end > sampleDataEnd ? end : sampleDataEnd;
+    console.log(`[workRecords.getTodayRecords] Fetching records from ${actualStart.toISOString()} to ${actualEnd.toISOString()}`);
     const records = await db.select().from(schema_exports.workRecords).where(
       and2(
         eq3(schema_exports.workRecords.userId, ctx.user.id),
-        gte(schema_exports.workRecords.startTime, start),
-        lte(schema_exports.workRecords.startTime, end)
+        gte(schema_exports.workRecords.startTime, actualStart),
+        lte(schema_exports.workRecords.startTime, actualEnd)
       )
     ).orderBy(schema_exports.workRecords.startTime);
+    console.log(`[workRecords.getTodayRecords] Found ${records.length} records`);
     const vehicles2 = await db.select().from(schema_exports.vehicles);
     const processes2 = await db.select().from(schema_exports.processes);
     const vehicleMap = new Map(vehicles2.map((v) => [v.id, v]));
@@ -2816,6 +2823,7 @@ var vehiclesRouter = createTRPCRouter({
   ).query(async ({ input }) => {
     const db = await getDb();
     if (!db) {
+      console.warn("[vehicles.list] Database connection failed");
       return [];
     }
     let vehicles2;
