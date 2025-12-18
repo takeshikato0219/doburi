@@ -35,13 +35,56 @@ export const SAMPLE_PROCESSES = [
 ];
 
 export function getSampleWorkRecords(userId: number) {
-    const baseDate = new Date("2024-12-01T08:00:00+09:00");
     const records = [];
     
-    // 20件の車両に対して、各ユーザーが作業記録を持つ
+    // 現在の週（日曜日から土曜日）のデータを生成
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0=日曜日, 6=土曜日
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - dayOfWeek); // 今週の日曜日
+    startOfWeek.setHours(8, 0, 0, 0);
+    
+    // 2024年12月のデータも追加（サンプル用）
+    const decemberBase = new Date("2024-12-01T08:00:00+09:00");
+    
+    // 現在の週のデータ（7日分）
     for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
-        const workDate = new Date(baseDate);
-        workDate.setDate(workDate.getDate() + dayOffset);
+        const workDate = new Date(startOfWeek);
+        workDate.setDate(startOfWeek.getDate() + dayOffset);
+        
+        // 各日に2-3件の作業記録を作成
+        const numRecords = 2 + (dayOffset % 2); // 2件または3件
+        
+        for (let recordIdx = 0; recordIdx < numRecords; recordIdx++) {
+            const vehicleId = ((dayOffset * 3 + recordIdx) % 20) + 1;
+            const processId = ((dayOffset + recordIdx) % 6) + 1;
+            const workMinutes = 120 + (recordIdx * 120) + (dayOffset * 40);
+            
+            const startTime = new Date(workDate);
+            startTime.setHours(8 + recordIdx * 4, 0, 0, 0); // 8時、12時、16時など
+            
+            const endTime = new Date(startTime);
+            endTime.setMinutes(endTime.getMinutes() + workMinutes);
+            
+            records.push({
+                id: records.length + 1,
+                userId,
+                vehicleId,
+                processId,
+                startTime,
+                endTime,
+                workDescription: `${SAMPLE_PROCESSES[processId - 1]?.name || "作業"}（${SAMPLE_VEHICLES[vehicleId - 1]?.customerName || "建物"}）`,
+                vehicleNumber: SAMPLE_VEHICLES[vehicleId - 1]?.vehicleNumber || "不明",
+                processName: SAMPLE_PROCESSES[processId - 1]?.name || "不明",
+                durationMinutes: workMinutes,
+            });
+        }
+    }
+    
+    // 2024年12月のデータも追加（過去のデータとして）
+    for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
+        const workDate = new Date(decemberBase);
+        workDate.setDate(decemberBase.getDate() + dayOffset);
         
         for (let recordIdx = 0; recordIdx < 2; recordIdx++) {
             const vehicleId = (dayOffset % 20) + 1;

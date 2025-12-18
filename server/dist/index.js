@@ -1374,11 +1374,42 @@ __export(sampleData_exports, {
   getSampleWorkRecords: () => getSampleWorkRecords
 });
 function getSampleWorkRecords(userId) {
-  const baseDate = /* @__PURE__ */ new Date("2024-12-01T08:00:00+09:00");
   const records = [];
+  const today = /* @__PURE__ */ new Date();
+  const dayOfWeek = today.getDay();
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - dayOfWeek);
+  startOfWeek.setHours(8, 0, 0, 0);
+  const decemberBase = /* @__PURE__ */ new Date("2024-12-01T08:00:00+09:00");
   for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
-    const workDate = new Date(baseDate);
-    workDate.setDate(workDate.getDate() + dayOffset);
+    const workDate = new Date(startOfWeek);
+    workDate.setDate(startOfWeek.getDate() + dayOffset);
+    const numRecords = 2 + dayOffset % 2;
+    for (let recordIdx = 0; recordIdx < numRecords; recordIdx++) {
+      const vehicleId = (dayOffset * 3 + recordIdx) % 20 + 1;
+      const processId = (dayOffset + recordIdx) % 6 + 1;
+      const workMinutes = 120 + recordIdx * 120 + dayOffset * 40;
+      const startTime = new Date(workDate);
+      startTime.setHours(8 + recordIdx * 4, 0, 0, 0);
+      const endTime = new Date(startTime);
+      endTime.setMinutes(endTime.getMinutes() + workMinutes);
+      records.push({
+        id: records.length + 1,
+        userId,
+        vehicleId,
+        processId,
+        startTime,
+        endTime,
+        workDescription: `${SAMPLE_PROCESSES[processId - 1]?.name || "\u4F5C\u696D"}\uFF08${SAMPLE_VEHICLES[vehicleId - 1]?.customerName || "\u5EFA\u7269"}\uFF09`,
+        vehicleNumber: SAMPLE_VEHICLES[vehicleId - 1]?.vehicleNumber || "\u4E0D\u660E",
+        processName: SAMPLE_PROCESSES[processId - 1]?.name || "\u4E0D\u660E",
+        durationMinutes: workMinutes
+      });
+    }
+  }
+  for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
+    const workDate = new Date(decemberBase);
+    workDate.setDate(decemberBase.getDate() + dayOffset);
     for (let recordIdx = 0; recordIdx < 2; recordIdx++) {
       const vehicleId = dayOffset % 20 + 1;
       const processId = recordIdx % 6 + 1;
