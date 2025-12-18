@@ -398,7 +398,7 @@ async function initializeSampleData(db: any) {
             
             console.log(`[Init] Found ${vehicleTypes.length} vehicle types`);
             
-            if (vehicleTypes.length === 0) {
+                if (vehicleTypes.length === 0) {
                 console.log("[Init] ⚠️ 車種マスタが存在しません。デフォルトの車種を作成します...");
                 try {
                     await db.insert(schema.vehicleTypes).values({
@@ -417,7 +417,7 @@ async function initializeSampleData(db: any) {
             }
             
             if (vehicleTypes.length > 0) {
-                const vehicleTypeId = vehicleTypes[0].id;
+                    const vehicleTypeId = vehicleTypes[0].id;
                 console.log(`[Init] ✅ 車種ID ${vehicleTypeId} を使用してサンプル車両を作成します`);
                     // ゼネコン向け建設現場のサンプルデータ（20件の建物）
                     const buildingProjects = [
@@ -658,10 +658,23 @@ async function initializeSampleData(db: any) {
                             }
                             
                             if (workRecords.length > 0) {
-                                await db.insert(schema.workRecords).values(workRecords);
-                                console.log(`[Init] ✅ Created ${workRecords.length} sample work records`);
-            } else {
-                                console.warn("[Init] No work records to insert");
+                                // バッチで挿入（1000件ずつ）
+                                const batchSize = 1000;
+                                for (let i = 0; i < workRecords.length; i += batchSize) {
+                                    const batch = workRecords.slice(i, i + batchSize);
+                                    await db.insert(schema.workRecords).values(batch);
+                                    console.log(`[Init] ✅ Inserted work records batch ${Math.floor(i / batchSize) + 1} (${batch.length} records)`);
+                                }
+                                console.log(`[Init] ✅ Created ${workRecords.length} sample work records in total`);
+                                
+                                // 確認: 挿入した作業記録を確認
+                                const insertedWorkRecords = await db
+                                    .select({ id: schema.workRecords.id })
+                                    .from(schema.workRecords)
+                                    .limit(10);
+                                console.log(`[Init] ✅ 確認: データベースに作業記録が存在します (最初の10件を確認)`);
+                            } else {
+                                console.warn("[Init] ⚠️ No work records to insert");
                             }
                         }
                     } catch (error) {

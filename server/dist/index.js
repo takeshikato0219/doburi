@@ -9833,10 +9833,17 @@ async function initializeSampleData(db) {
               }
             }
             if (workRecords2.length > 0) {
-              await db.insert(schema_exports.workRecords).values(workRecords2);
-              console.log(`[Init] \u2705 Created ${workRecords2.length} sample work records`);
+              const batchSize = 1e3;
+              for (let i = 0; i < workRecords2.length; i += batchSize) {
+                const batch = workRecords2.slice(i, i + batchSize);
+                await db.insert(schema_exports.workRecords).values(batch);
+                console.log(`[Init] \u2705 Inserted work records batch ${Math.floor(i / batchSize) + 1} (${batch.length} records)`);
+              }
+              console.log(`[Init] \u2705 Created ${workRecords2.length} sample work records in total`);
+              const insertedWorkRecords = await db.select({ id: schema_exports.workRecords.id }).from(schema_exports.workRecords).limit(10);
+              console.log(`[Init] \u2705 \u78BA\u8A8D: \u30C7\u30FC\u30BF\u30D9\u30FC\u30B9\u306B\u4F5C\u696D\u8A18\u9332\u304C\u5B58\u5728\u3057\u307E\u3059 (\u6700\u521D\u306E10\u4EF6\u3092\u78BA\u8A8D)`);
             } else {
-              console.warn("[Init] No work records to insert");
+              console.warn("[Init] \u26A0\uFE0F No work records to insert");
             }
           }
         } catch (error) {
