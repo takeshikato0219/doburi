@@ -10,6 +10,12 @@ const queryClient = new QueryClient({
         queries: {
             refetchOnWindowFocus: false,
             retry: (failureCount, error: any) => {
+                // getWorkRecordIssues関連のエラーはリトライしない（サンプルページのため）
+                const errorMessage = error?.message || error?.data?.message || "";
+                if (errorMessage.includes("作業記録管理不備") || errorMessage.includes("getWorkRecordIssues") || errorMessage.includes("Access denied")) {
+                    return false; // リトライしない
+                }
+                
                 // 401エラー（認証エラー）の場合はリトライしない
                 if (error?.data?.code === "UNAUTHORIZED" || error?.data?.httpStatus === 401) {
                     // ログインページにリダイレクト
@@ -21,6 +27,12 @@ const queryClient = new QueryClient({
                 return failureCount < 1;
             },
             onError: (error: any) => {
+                // getWorkRecordIssues関連のエラーは無視（サンプルページのため）
+                const errorMessage = error?.message || error?.data?.message || "";
+                if (errorMessage.includes("作業記録管理不備") || errorMessage.includes("getWorkRecordIssues") || errorMessage.includes("Access denied")) {
+                    return; // エラーを無視（コンソールにも表示しない）
+                }
+                
                 // 401エラー（認証エラー）の場合はログインページにリダイレクト
                 if (error?.data?.code === "UNAUTHORIZED" || error?.data?.httpStatus === 401) {
                     if (window.location.pathname !== "/login") {
@@ -31,6 +43,12 @@ const queryClient = new QueryClient({
         },
         mutations: {
             retry: (failureCount, error: any) => {
+                // getWorkRecordIssues関連のエラーはリトライしない（サンプルページのため）
+                const errorMessage = error?.message || error?.data?.message || "";
+                if (errorMessage.includes("作業記録管理不備") || errorMessage.includes("getWorkRecordIssues") || errorMessage.includes("Access denied")) {
+                    return false; // リトライしない
+                }
+                
                 // 401エラー（認証エラー）の場合はリトライしない
                 if (error?.data?.code === "UNAUTHORIZED" || error?.data?.httpStatus === 401) {
                     // ログインページにリダイレクト
@@ -42,6 +60,12 @@ const queryClient = new QueryClient({
                 return false; // 通常のミューテーションはリトライしない
             },
             onError: (error: any) => {
+                // getWorkRecordIssues関連のエラーは無視（サンプルページのため）
+                const errorMessage = error?.message || error?.data?.message || "";
+                if (errorMessage.includes("作業記録管理不備") || errorMessage.includes("getWorkRecordIssues") || errorMessage.includes("Access denied")) {
+                    return; // エラーを無視（コンソールにも表示しない）
+                }
+                
                 // 401エラー（認証エラー）の場合はログインページにリダイレクト
                 if (error?.data?.code === "UNAUTHORIZED" || error?.data?.httpStatus === 401) {
                     if (window.location.pathname !== "/login") {
